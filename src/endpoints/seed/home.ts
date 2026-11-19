@@ -1,619 +1,192 @@
-import type { Category, Media } from '@/payload-types'
-import { RequiredDataFromCollectionSlug } from 'payload'
+import type { Category, Media, Product } from '@/payload-types'
+import type { RequiredDataFromCollectionSlug } from 'payload'
 
-type ProductArgs = {
+type Args = {
+  heroTiles: Media[]
+  productImage: Media
+  calloutImage: Media
+  slides: Media[]
+  pressImages: Media[]
+  aura: Product
+  accessories: Category
   metaImage: Media
-  contentImage: Media
 }
 
-export const homePageData: (args: ProductArgs) => RequiredDataFromCollectionSlug<'pages'> = ({
+/** Sabi-style home page: hero → product intro → steps → featured product → slideshow → collection → press → newsletter. */
+export const homePageData = ({
+  heroTiles,
+  productImage,
+  calloutImage,
+  slides,
+  pressImages,
+  aura,
+  accessories,
   metaImage,
-  contentImage,
-}) => {
-  return {
-    slug: 'home',
-    _status: 'published',
-    hero: {
-      type: 'lowImpact',
-      links: [
+}: Args): RequiredDataFromCollectionSlug<'pages'> => ({
+  title: 'Home',
+  slug: 'home',
+  _status: 'published',
+  hero: { type: 'none' },
+  meta: {
+    title: 'Solana Studio — Aura One',
+    description: 'Aura One is a palm-sized companion that reads your breath and gently guides you back to focus.',
+    image: metaImage.id,
+  },
+  layout: [
+    {
+      blockType: 'sabiHero',
+      headline: 'Just Breathe.',
+      tiles: heroTiles.map((image) => ({ image: image.id })),
+      columnsDesktop: 6,
+      columnsMobile: 3,
+      height: 'tall',
+      overlay: 55,
+      parallax: 35,
+      drift: true,
+    },
+    {
+      blockType: 'productIntro',
+      anchor: 'aura-one',
+      name: 'Aura One',
+      watermark: 'Aura One',
+      promise:
+        'A palm-sized companion that reads your breath and gently guides you back to focus — wherever you are.',
+      secondary: 'No screens. No feeds. Just you, thinking clearly.',
+      image: productImage.id,
+      tagline: 'Focus, held in your hand',
+      callouts: [{ image: calloutImage.id, label: 'Breath sensor array', detail: '0.4 mm membrane' }],
+      enableLink: false,
+      background: 'cream',
+    },
+    {
+      blockType: 'steps',
+      anchor: 'science',
+      heading: 'The Science\nBehind Calm\nFocus',
+      steps: [
+        { body: 'A breath sensor array, thinner than a coin, listens to the rhythm of your breathing.' },
+        { body: 'On-device models learn your personal baseline over the first week — nothing leaves the device.' },
+        { body: 'Gentle haptics pace your breath back to a focused state, in under ninety seconds.' },
+      ],
+      numberStyle: 'padded',
+      background: 'sand',
+    },
+    {
+      blockType: 'featuredProduct',
+      anchor: 'buy',
+      product: aura.id,
+      eyebrow: 'First batch · Ships in December',
+      heading: 'Aura One',
+      description:
+        'Machined aluminium shell, a fabric-soft underside and a battery that lasts a fortnight. Choose your finish.',
+      highlights: [
+        { text: 'Two-week battery, USB-C and wireless charging' },
+        { text: 'Works offline — your data stays on the device' },
+        { text: 'Free shipping and 60-night returns' },
+      ],
+      imagePosition: 'left',
+      buttonLabel: 'Add to cart',
+      background: 'cream',
+    },
+    {
+      blockType: 'slideshow',
+      slides: [
         {
-          link: {
-            type: 'custom',
-            appearance: 'default',
-            label: 'All products',
-            url: '/search',
-          },
+          image: slides[0].id,
+          eyebrow: 'Morning',
+          heading: 'Begin before the noise.',
+          subheading: 'Three slow minutes with Aura One set the tone for the whole day.',
+          label: 'Morning ritual',
+          scheme: 'light',
+          position: 'bottom-left',
+          positionMobile: 'bottom',
+          alignment: 'left',
+          overlay: 35,
+          links: [{ link: { type: 'custom', url: '/products/aura-one', label: 'Shop Aura One', appearance: 'default' } }],
         },
         {
-          link: {
-            type: 'custom',
-            appearance: 'outline',
-            label: 'Contact',
-            url: '/contact',
-          },
+          image: slides[1].id,
+          eyebrow: 'Deep work',
+          heading: 'Hold the thread.',
+          subheading: 'A quiet pulse when your attention drifts — never a notification.',
+          label: 'Deep work',
+          scheme: 'cream',
+          position: 'middle-right',
+          positionMobile: 'bottom',
+          alignment: 'left',
+          overlay: 0,
+        },
+        {
+          image: slides[2].id,
+          eyebrow: 'Evening',
+          heading: 'Let the day go.',
+          subheading: 'Wind-down sessions that slow your breath and your thoughts.',
+          label: 'Evening wind-down',
+          scheme: 'light',
+          position: 'bottom-center',
+          positionMobile: 'bottom',
+          alignment: 'center',
+          overlay: 40,
         },
       ],
-      richText: {
-        root: {
-          type: 'root',
-          children: [
-            {
-              type: 'heading',
-              children: [
-                {
-                  type: 'text',
-                  detail: 0,
-                  format: 0,
-                  mode: 'normal',
-                  style: '',
-                  text: 'Payload Ecommerce Template',
-                  version: 1,
-                },
-              ],
-              direction: null,
-              format: '',
-              indent: 0,
-              tag: 'h1',
-              version: 1,
-            },
-            {
-              type: 'paragraph',
-              children: [
-                {
-                  type: 'link',
-                  children: [
-                    {
-                      type: 'text',
-                      detail: 0,
-                      format: 0,
-                      mode: 'normal',
-                      style: '',
-                      text: 'Visit the admin dashboard',
-                      version: 1,
-                    },
-                  ],
-                  direction: null,
-                  fields: {
-                    linkType: 'custom',
-                    newTab: false,
-                    url: '/admin',
-                  },
-                  format: '',
-                  indent: 0,
-                  version: 3,
-                },
-                {
-                  type: 'text',
-                  detail: 0,
-                  format: 0,
-                  mode: 'normal',
-                  style: '',
-                  text: " to begin managing this site's content. The code for this template is completely open-source and can be found ",
-                  version: 1,
-                },
-                {
-                  type: 'link',
-                  children: [
-                    {
-                      type: 'text',
-                      detail: 0,
-                      format: 0,
-                      mode: 'normal',
-                      style: '',
-                      text: 'on our Github',
-                      version: 1,
-                    },
-                  ],
-                  direction: null,
-                  fields: {
-                    linkType: 'custom',
-                    newTab: true,
-                    url: 'https://github.com/payloadcms/payload/tree/3.x/templates/ecommerce',
-                  },
-                  format: '',
-                  indent: 0,
-                  version: 3,
-                },
-                {
-                  type: 'text',
-                  detail: 0,
-                  format: 0,
-                  mode: 'normal',
-                  style: '',
-                  text: '. ',
-                  version: 1,
-                },
-              ],
-              direction: null,
-              format: '',
-              indent: 0,
-              textFormat: 0,
-              version: 1,
-            },
-          ],
-          direction: null,
-          format: '',
-          indent: 0,
-          version: 1,
-        },
-      },
+      transition: 'rise',
+      autoplay: true,
+      interval: 6,
+      pauseOnHover: true,
+      swipe: true,
+      controls: 'bars',
+      progressStyle: 'timer',
+      counterStyle: 'divider',
+      arrowStyle: 'chevron',
+      container: 'inset',
+      heightDesktop: 88,
+      heightMobile: 78,
+      radius: 24,
     },
-    layout: [
-      {
-        blockName: 'Content Block',
-        blockType: 'content',
-        columns: [
-          {
-            richText: {
-              root: {
-                type: 'root',
-                children: [
-                  {
-                    type: 'heading',
-                    children: [
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: 'Core features',
-                        version: 1,
-                      },
-                    ],
-                    direction: null,
-                    format: '',
-                    indent: 0,
-                    tag: 'h2',
-                    version: 1,
-                  },
-                ],
-                direction: null,
-                format: '',
-                indent: 0,
-                version: 1,
-              },
-            },
-            size: 'full',
-          },
-          {
-            enableLink: false,
-            richText: {
-              root: {
-                type: 'root',
-                children: [
-                  {
-                    type: 'heading',
-                    children: [
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: 'Admin Dashboard',
-                        version: 1,
-                      },
-                    ],
-                    direction: null,
-                    format: '',
-                    indent: 0,
-                    tag: 'h3',
-                    version: 1,
-                  },
-                  {
-                    type: 'paragraph',
-                    children: [
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: "Manage this site's pages and products from the ",
-                        version: 1,
-                      },
-                      {
-                        type: 'link',
-                        children: [
-                          {
-                            type: 'text',
-                            detail: 0,
-                            format: 0,
-                            mode: 'normal',
-                            style: '',
-                            text: 'admin dashboard',
-                            version: 1,
-                          },
-                        ],
-                        direction: null,
-                        fields: {
-                          linkType: 'custom',
-                          newTab: false,
-                          url: '/admin',
-                        },
-                        format: '',
-                        indent: 0,
-                        version: 2,
-                      },
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: '.',
-                        version: 1,
-                      },
-                    ],
-                    direction: null,
-                    format: '',
-                    indent: 0,
-                    textFormat: 0,
-                    version: 1,
-                  },
-                ],
-                direction: null,
-                format: '',
-                indent: 0,
-                version: 1,
-              },
-            },
-            size: 'oneThird',
-          },
-          {
-            enableLink: false,
-            richText: {
-              root: {
-                type: 'root',
-                children: [
-                  {
-                    type: 'heading',
-                    children: [
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: 'Preview',
-                        version: 1,
-                      },
-                    ],
-                    direction: null,
-                    format: '',
-                    indent: 0,
-                    tag: 'h3',
-                    version: 1,
-                  },
-                  {
-                    type: 'paragraph',
-                    children: [
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: 'Using versions, drafts, and preview, editors can review and share their changes before publishing them.',
-                        version: 1,
-                      },
-                    ],
-                    direction: null,
-                    format: '',
-                    indent: 0,
-                    textFormat: 0,
-                    version: 1,
-                  },
-                ],
-                direction: null,
-                format: '',
-                indent: 0,
-                version: 1,
-              },
-            },
-            size: 'oneThird',
-          },
-          {
-            enableLink: false,
-            richText: {
-              root: {
-                type: 'root',
-                children: [
-                  {
-                    type: 'heading',
-                    children: [
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: 'Page Builder',
-                        version: 1,
-                      },
-                    ],
-                    direction: null,
-                    format: '',
-                    indent: 0,
-                    tag: 'h3',
-                    version: 1,
-                  },
-                  {
-                    type: 'paragraph',
-                    children: [
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: 'Custom page builder allows you to create unique page and product layouts for any type of content.',
-                        version: 1,
-                      },
-                    ],
-                    direction: null,
-                    format: '',
-                    indent: 0,
-                    textFormat: 0,
-                    version: 1,
-                  },
-                ],
-                direction: null,
-                format: '',
-                indent: 0,
-                version: 1,
-              },
-            },
-            size: 'oneThird',
-          },
-          {
-            enableLink: false,
-            richText: {
-              root: {
-                type: 'root',
-                children: [
-                  {
-                    type: 'heading',
-                    children: [
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: 'SEO',
-                        version: 1,
-                      },
-                    ],
-                    direction: null,
-                    format: '',
-                    indent: 0,
-                    tag: 'h3',
-                    version: 1,
-                  },
-                  {
-                    type: 'paragraph',
-                    children: [
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: 'Editors have complete control over SEO data and site content directly from the ',
-                        version: 1,
-                      },
-                      {
-                        type: 'link',
-                        children: [
-                          {
-                            type: 'text',
-                            detail: 0,
-                            format: 0,
-                            mode: 'normal',
-                            style: '',
-                            text: 'admin dashboard',
-                            version: 1,
-                          },
-                        ],
-                        direction: null,
-                        fields: {
-                          linkType: 'custom',
-                          newTab: false,
-                          url: '/admin',
-                        },
-                        format: '',
-                        indent: 0,
-                        version: 2,
-                      },
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: '.',
-                        version: 1,
-                      },
-                    ],
-                    direction: null,
-                    format: '',
-                    indent: 0,
-                    textFormat: 0,
-                    version: 1,
-                  },
-                ],
-                direction: null,
-                format: '',
-                indent: 0,
-                version: 1,
-              },
-            },
-            size: 'oneThird',
-          },
-          {
-            enableLink: false,
-            richText: {
-              root: {
-                type: 'root',
-                children: [
-                  {
-                    type: 'heading',
-                    children: [
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: 'Dark Mode',
-                        version: 1,
-                      },
-                    ],
-                    direction: null,
-                    format: '',
-                    indent: 0,
-                    tag: 'h3',
-                    version: 1,
-                  },
-                  {
-                    type: 'paragraph',
-                    children: [
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: 'Users will experience this site in their preferred color scheme and each block can be inverted.',
-                        version: 1,
-                      },
-                    ],
-                    direction: null,
-                    format: '',
-                    indent: 0,
-                    textFormat: 0,
-                    version: 1,
-                  },
-                ],
-                direction: null,
-                format: '',
-                indent: 0,
-                version: 1,
-              },
-            },
-            size: 'oneThird',
-          },
-        ],
-      },
-      {
-        blockName: 'Media Block',
-        blockType: 'mediaBlock',
-        media: contentImage,
-      },
-      {
-        blockName: 'CTA',
-        blockType: 'cta',
-        links: [
-          {
-            link: {
-              type: 'custom',
-              appearance: 'default',
-              label: 'All products',
-              url: '/products',
-            },
-          },
-        ],
-        richText: {
-          root: {
-            type: 'root',
-            children: [
-              {
-                type: 'heading',
-                children: [
-                  {
-                    type: 'text',
-                    detail: 0,
-                    format: 0,
-                    mode: 'normal',
-                    style: '',
-                    text: 'This is a call to action',
-                    version: 1,
-                  },
-                ],
-                direction: null,
-                format: '',
-                indent: 0,
-                tag: 'h3',
-                version: 1,
-              },
-              {
-                type: 'paragraph',
-                children: [
-                  {
-                    type: 'text',
-                    detail: 0,
-                    format: 0,
-                    mode: 'normal',
-                    style: '',
-                    text: 'This is a custom layout building block ',
-                    version: 1,
-                  },
-                  {
-                    type: 'link',
-                    children: [
-                      {
-                        type: 'text',
-                        detail: 0,
-                        format: 0,
-                        mode: 'normal',
-                        style: '',
-                        text: 'configured in the admin dashboard',
-                        version: 1,
-                      },
-                    ],
-                    direction: null,
-                    fields: {
-                      linkType: 'custom',
-                      newTab: false,
-                      url: '/admin',
-                    },
-                    format: '',
-                    indent: 0,
-                    version: 2,
-                  },
-                  {
-                    type: 'text',
-                    detail: 0,
-                    format: 0,
-                    mode: 'normal',
-                    style: '',
-                    text: '.',
-                    version: 1,
-                  },
-                ],
-                direction: null,
-                format: '',
-                indent: 0,
-                textFormat: 0,
-                version: 1,
-              },
-            ],
-            direction: null,
-            format: '',
-            indent: 0,
-            version: 1,
-          },
-        },
-      },
-    ],
-    meta: {
-      description: 'An open-source ecommerce site built with Payload and Next.js.',
-      // @ts-ignore
-      image: metaImage,
-      title: 'Payload Ecommerce Template',
+    {
+      blockType: 'collection',
+      heading: 'Complete the set',
+      intro: 'Thoughtful accessories, made in the same small batches.',
+      source: 'category',
+      category: accessories.id,
+      display: 'grid',
+      columns: '3',
+      limit: 6,
+      enableLink: true,
+      link: { type: 'custom', url: '/shop', label: 'Shop all' },
+      background: 'cream',
     },
-    title: 'Home',
-  }
-}
+    {
+      blockType: 'press',
+      anchor: 'press',
+      heading: 'In the Press',
+      style: 'cards',
+      items: [
+        {
+          publication: 'THE QUIET REVIEW',
+          date: '2026-10-02T00:00:00.000Z',
+          quote: 'A Pocket-Sized Object That Teaches You to Breathe Again',
+          url: 'https://example.com/press/quiet-review',
+          image: pressImages[0].id,
+        },
+        {
+          publication: 'FORM & FIELD',
+          date: '2026-09-14T00:00:00.000Z',
+          quote: 'The Calmest Gadget We Tested This Year',
+          url: 'https://example.com/press/form-and-field',
+          image: pressImages[1].id,
+        },
+      ],
+      background: 'cream',
+    },
+    {
+      blockType: 'newsletter',
+      heading: 'Join the waitlist to be the first to try the next batch of Aura One.',
+      placeholder: 'Enter your email',
+      buttonLabel: 'Join waitlist',
+      source: 'waitlist',
+      successMessage: "You're on the list. We'll write when your batch is ready.",
+      layout: 'minimal',
+      background: 'stone',
+    },
+  ],
+})

@@ -19,7 +19,7 @@ export const SabiHero: Block = {
           name: 'headline',
           type: 'text',
           required: true,
-          defaultValue: 'Just Think.',
+          defaultValue: 'Just Breathe.',
           admin: { width: '50%' },
         },
       ],

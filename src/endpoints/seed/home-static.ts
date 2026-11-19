@@ -1,89 +1,24 @@
-import { RequiredDataFromCollectionSlug } from 'payload'
+import type { Page } from '@/payload-types'
 
-export const homeStaticData: () => RequiredDataFromCollectionSlug<'pages'> = () => {
-  return {
-    slug: 'home',
-    _status: 'published',
-    hero: {
-      type: 'lowImpact',
-      richText: {
-        root: {
-          type: 'root',
-          children: [
-            {
-              type: 'heading',
-              children: [
-                {
-                  type: 'text',
-                  detail: 0,
-                  format: 0,
-                  mode: 'normal',
-                  style: '',
-                  text: 'Payload Ecommerce Template',
-                  version: 1,
-                },
-              ],
-              direction: null,
-              format: '',
-              indent: 0,
-              tag: 'h1',
-              version: 1,
-            },
-            {
-              type: 'paragraph',
-              children: [
-                {
-                  type: 'link',
-                  children: [
-                    {
-                      type: 'text',
-                      detail: 0,
-                      format: 0,
-                      mode: 'normal',
-                      style: '',
-                      text: 'Visit the admin dashboard',
-                      version: 1,
-                    },
-                  ],
-                  direction: null,
-                  fields: {
-                    linkType: 'custom',
-                    newTab: false,
-                    url: '/admin',
-                  },
-                  format: '',
-                  indent: 0,
-                  version: 2,
-                },
-                {
-                  type: 'text',
-                  detail: 0,
-                  format: 0,
-                  mode: 'normal',
-                  style: '',
-                  text: ' to make your account and seed content for your website.',
-                  version: 1,
-                },
-              ],
-              direction: null,
-              format: '',
-              indent: 0,
-              textFormat: 0,
-              version: 1,
-            },
-          ],
-          direction: null,
-          format: '',
-          indent: 0,
-          version: 1,
-        },
-      },
+/** Shown at "/" until the database is seeded (Admin → "Seed your database", or `pnpm seed`). */
+export const homeStaticData = (): Partial<Page> => ({
+  slug: 'home',
+  title: 'Home',
+  _status: 'published',
+  hero: { type: 'none' },
+  meta: { title: 'Solana Studio', description: 'A premium one-product store template.' },
+  layout: [
+    {
+      blockType: 'steps',
+      heading: 'Welcome to\nSolana Studio',
+      intro: 'Your store is running — it just has no content yet.',
+      steps: [
+        { body: 'Open /admin and create the first user (it becomes an admin).' },
+        { body: 'Click "Seed your database" on the dashboard, or run `pnpm seed`.' },
+        { body: 'Edit the Home page blocks with live preview.' },
+      ],
+      numberStyle: 'padded',
+      background: 'cream',
     },
-    layout: [],
-    meta: {
-      description: 'An open-source ecommerce site built with Payload and Next.js.',
-      title: 'Payload Ecommerce Template',
-    },
-    title: 'Home',
-  }
-}
+  ],
+})
