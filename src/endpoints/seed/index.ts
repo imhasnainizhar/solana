@@ -367,7 +367,7 @@ export const seed = async ({ payload, req }: { payload: Payload; req: PayloadReq
     payload.updateGlobal({
       slug: 'footer',
       data: {
-        tagline: 'Join the waitlist to be the first to try the next batch of Aura One.',
+        tagline: 'Designed for focus. Made in small batches by Solana Studio.',
         legal: 'Solana Studio Inc.',
         showWordmark: true,
         columns: [

@@ -35,20 +35,28 @@ async function gradientFallback(seed: string, w: number, h: number): Promise<Fil
   return toFile(data, `${seed}.jpg`, 'image/jpeg')
 }
 
+/** Downloads a seeded picsum photo; flat, low-contrast frames (blank skies, walls) are skipped. */
 export async function photo(seed: string, w: number, h: number): Promise<File> {
-  try {
-    const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), 20000)
-    const res = await fetch(`https://picsum.photos/seed/${encodeURIComponent(seed)}/${w}/${h}.jpg`, {
-      signal: controller.signal,
-    })
-    clearTimeout(timer)
-    if (!res.ok) throw new Error(String(res.status))
-    const data = Buffer.from(await res.arrayBuffer())
-    return toFile(data, `${seed}.jpg`, 'image/jpeg')
-  } catch {
-    return gradientFallback(seed, w, h)
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const key = attempt ? `${seed}-${attempt}` : seed
+    try {
+      const controller = new AbortController()
+      const timer = setTimeout(() => controller.abort(), 20000)
+      const res = await fetch(`https://picsum.photos/seed/${encodeURIComponent(key)}/${w}/${h}.jpg`, {
+        signal: controller.signal,
+      })
+      clearTimeout(timer)
+      if (!res.ok) throw new Error(String(res.status))
+      const data = Buffer.from(await res.arrayBuffer())
+      const { channels } = await sharp(data).stats()
+      const contrast = channels.slice(0, 3).reduce((sum, c) => sum + c.stdev, 0) / 3
+      if (contrast < 38 && attempt < 3) continue
+      return toFile(data, `${seed}.jpg`, 'image/jpeg')
+    } catch {
+      break
+    }
   }
+  return gradientFallback(seed, w, h)
 }
 
 /** Download many photos with limited concurrency, preserving order. */
@@ -80,6 +88,8 @@ export async function render(shape: Shape, finish: Finish, name: string, w = 120
   const f = finishes[finish]
   const cx = w / 2
   const cy = h * 0.52
+  const W = w // backdrop width
+  w = Math.min(w, h * 0.8) // object scale follows the shorter side (landscape renders stay in frame)
   let object = ''
   switch (shape) {
     case 'pebble':
@@ -112,7 +122,7 @@ export async function render(shape: Shape, finish: Finish, name: string, w = 120
         ${Array.from({ length: 6 }, (_, i) => `<circle cx="${cx}" cy="${cy}" r="${w * (0.05 + i * 0.045)}" fill="none" stroke="${f.light}" stroke-opacity="${0.75 - i * 0.1}" stroke-width="3"/>`).join('')}`
       break
   }
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${h}">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${f.bg[0]}"/><stop offset="1" stop-color="${f.bg[1]}"/></linearGradient>
     <radialGradient id="body" cx="0.35" cy="0.3" r="0.85"><stop offset="0" stop-color="${f.light}"/><stop offset="0.55" stop-color="${f.body}"/><stop offset="1" stop-color="${f.shade}"/></radialGradient>
