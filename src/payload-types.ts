@@ -72,13 +72,7 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
-    pages: Page;
     categories: Category;
-    media: Media;
-    subscribers: Subscriber;
-    forms: Form;
-    'form-submissions': FormSubmission;
     addresses: Address;
     variants: Variant;
     variantTypes: VariantType;
@@ -87,32 +81,33 @@ export interface Config {
     carts: Cart;
     orders: Order;
     transactions: Transaction;
+    pages: Page;
+    media: Media;
+    subscribers: Subscriber;
+    forms: Form;
+    'form-submissions': FormSubmission;
+    users: User;
+    'login-tokens': LoginToken;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {
-    users: {
-      orders: 'orders';
-      cart: 'carts';
-      addresses: 'addresses';
-    };
     variantTypes: {
       options: 'variantOptions';
     };
     products: {
       variants: 'variants';
     };
+    users: {
+      orders: 'orders';
+      cart: 'carts';
+      addresses: 'addresses';
+    };
   };
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
-    pages: PagesSelect<false> | PagesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
-    subscribers: SubscribersSelect<false> | SubscribersSelect<true>;
-    forms: FormsSelect<false> | FormsSelect<true>;
-    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
     variants: VariantsSelect<false> | VariantsSelect<true>;
     variantTypes: VariantTypesSelect<false> | VariantTypesSelect<true>;
@@ -121,6 +116,13 @@ export interface Config {
     carts: CartsSelect<false> | CartsSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
     transactions: TransactionsSelect<false> | TransactionsSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    subscribers: SubscribersSelect<false> | SubscribersSelect<true>;
+    forms: FormsSelect<false> | FormsSelect<true>;
+    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
+    'login-tokens': LoginTokensSelect<false> | LoginTokensSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -186,10 +188,91 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "addresses".
+ */
+export interface Address {
+  id: number;
+  customer?: (number | null) | User;
+  title?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  company?: string | null;
+  addressLine1?: string | null;
+  addressLine2?: string | null;
+  city?: string | null;
+  state?: string | null;
+  postalCode?: string | null;
+  country:
+    | 'US'
+    | 'GB'
+    | 'CA'
+    | 'AU'
+    | 'AT'
+    | 'BE'
+    | 'BR'
+    | 'BG'
+    | 'CY'
+    | 'CZ'
+    | 'DK'
+    | 'EE'
+    | 'FI'
+    | 'FR'
+    | 'DE'
+    | 'GR'
+    | 'HK'
+    | 'HU'
+    | 'IN'
+    | 'IE'
+    | 'IT'
+    | 'JP'
+    | 'LV'
+    | 'LT'
+    | 'LU'
+    | 'MY'
+    | 'MT'
+    | 'MX'
+    | 'NL'
+    | 'NZ'
+    | 'NO'
+    | 'PL'
+    | 'PT'
+    | 'RO'
+    | 'SG'
+    | 'SK'
+    | 'SI'
+    | 'ES'
+    | 'SE'
+    | 'CH';
+  phone?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
   id: number;
+  email: string;
+  /**
+   * Linked automatically on first Google sign-in.
+   */
+  googleSubject?: string | null;
   name?: string | null;
   roles?: ('admin' | 'customer')[] | null;
   orders?: {
@@ -207,16 +290,6 @@ export interface User {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  resetPasswordRequestedAt?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
   sessions?:
     | {
         id: string;
@@ -224,7 +297,8 @@ export interface User {
         expiresAt: string;
       }[]
     | null;
-  password?: string | null;
+  updatedAt: string;
+  createdAt: string;
   collection: 'users';
 }
 /**
@@ -844,21 +918,6 @@ export interface CollectionBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
- */
-export interface Category {
-  id: number;
-  title: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "PressBlock".
  */
 export interface PressBlock {
@@ -1357,67 +1416,6 @@ export interface Cart {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "addresses".
- */
-export interface Address {
-  id: number;
-  customer?: (number | null) | User;
-  title?: string | null;
-  firstName?: string | null;
-  lastName?: string | null;
-  company?: string | null;
-  addressLine1?: string | null;
-  addressLine2?: string | null;
-  city?: string | null;
-  state?: string | null;
-  postalCode?: string | null;
-  country:
-    | 'US'
-    | 'GB'
-    | 'CA'
-    | 'AU'
-    | 'AT'
-    | 'BE'
-    | 'BR'
-    | 'BG'
-    | 'CY'
-    | 'CZ'
-    | 'DK'
-    | 'EE'
-    | 'FI'
-    | 'FR'
-    | 'DE'
-    | 'GR'
-    | 'HK'
-    | 'HU'
-    | 'IN'
-    | 'IE'
-    | 'IT'
-    | 'JP'
-    | 'LV'
-    | 'LT'
-    | 'LU'
-    | 'MY'
-    | 'MT'
-    | 'MX'
-    | 'NL'
-    | 'NZ'
-    | 'NO'
-    | 'PL'
-    | 'PT'
-    | 'RO'
-    | 'SG'
-    | 'SK'
-    | 'SI'
-    | 'ES'
-    | 'SE'
-    | 'CH';
-  phone?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "subscribers".
  */
 export interface Subscriber {
@@ -1449,6 +1447,22 @@ export interface FormSubmission {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "login-tokens".
+ */
+export interface LoginToken {
+  id: number;
+  tokenHash: string;
+  email: string;
+  expiresAt: string;
+  usedAt?: string | null;
+  ipHash?: string | null;
+  userAgent?: string | null;
+  redirect?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -1472,32 +1486,8 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
-      } | null)
-    | ({
-        relationTo: 'pages';
-        value: number | Page;
-      } | null)
-    | ({
         relationTo: 'categories';
         value: number | Category;
-      } | null)
-    | ({
-        relationTo: 'media';
-        value: number | Media;
-      } | null)
-    | ({
-        relationTo: 'subscribers';
-        value: number | Subscriber;
-      } | null)
-    | ({
-        relationTo: 'forms';
-        value: number | Form;
-      } | null)
-    | ({
-        relationTo: 'form-submissions';
-        value: number | FormSubmission;
       } | null)
     | ({
         relationTo: 'addresses';
@@ -1530,6 +1520,34 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'transactions';
         value: number | Transaction;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'subscribers';
+        value: number | Subscriber;
+      } | null)
+    | ({
+        relationTo: 'forms';
+        value: number | Form;
+      } | null)
+    | ({
+        relationTo: 'form-submissions';
+        value: number | FormSubmission;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'login-tokens';
+        value: number | LoginToken;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1575,31 +1593,282 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
+ * via the `definition` "categories_select".
  */
-export interface UsersSelect<T extends boolean = true> {
-  name?: T;
-  roles?: T;
-  orders?: T;
-  cart?: T;
-  addresses?: T;
+export interface CategoriesSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
   updatedAt?: T;
   createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  resetPasswordRequestedAt?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "addresses_select".
+ */
+export interface AddressesSelect<T extends boolean = true> {
+  customer?: T;
+  title?: T;
+  firstName?: T;
+  lastName?: T;
+  company?: T;
+  addressLine1?: T;
+  addressLine2?: T;
+  city?: T;
+  state?: T;
+  postalCode?: T;
+  country?: T;
+  phone?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variants_select".
+ */
+export interface VariantsSelect<T extends boolean = true> {
+  title?: T;
+  product?: T;
+  options?: T;
+  inventory?: T;
+  priceInUSDEnabled?: T;
+  priceInUSD?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variantTypes_select".
+ */
+export interface VariantTypesSelect<T extends boolean = true> {
+  label?: T;
+  name?: T;
+  options?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variantOptions_select".
+ */
+export interface VariantOptionsSelect<T extends boolean = true> {
+  _variantOptions_options_order?: T;
+  variantType?: T;
+  label?: T;
+  value?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  gallery?:
     | T
     | {
+        image?: T;
+        variantOption?: T;
         id?: T;
-        createdAt?: T;
-        expiresAt?: T;
       };
+  layout?:
+    | T
+    | {
+        cta?: T | CallToActionBlockSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
+      };
+  inventory?: T;
+  enableVariants?: T;
+  variantTypes?: T;
+  variants?: T;
+  priceInUSDEnabled?: T;
+  priceInUSD?: T;
+  relatedProducts?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  categories?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CallToActionBlock_select".
+ */
+export interface CallToActionBlockSelect<T extends boolean = true> {
+  richText?: T;
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlock_select".
+ */
+export interface ContentBlockSelect<T extends boolean = true> {
+  columns?:
+    | T
+    | {
+        size?: T;
+        richText?: T;
+        enableLink?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaBlock_select".
+ */
+export interface MediaBlockSelect<T extends boolean = true> {
+  media?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "carts_select".
+ */
+export interface CartsSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        product?: T;
+        variant?: T;
+        quantity?: T;
+        id?: T;
+      };
+  secret?: T;
+  customer?: T;
+  purchasedAt?: T;
+  status?: T;
+  subtotal?: T;
+  currency?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders_select".
+ */
+export interface OrdersSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        product?: T;
+        variant?: T;
+        quantity?: T;
+        id?: T;
+      };
+  shippingAddress?:
+    | T
+    | {
+        title?: T;
+        firstName?: T;
+        lastName?: T;
+        company?: T;
+        addressLine1?: T;
+        addressLine2?: T;
+        city?: T;
+        state?: T;
+        postalCode?: T;
+        country?: T;
+        phone?: T;
+      };
+  customer?: T;
+  customerEmail?: T;
+  transactions?: T;
+  status?: T;
+  amount?: T;
+  currency?: T;
+  accessToken?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "transactions_select".
+ */
+export interface TransactionsSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        product?: T;
+        variant?: T;
+        quantity?: T;
+        id?: T;
+      };
+  paymentMethod?: T;
+  stripe?:
+    | T
+    | {
+        customerID?: T;
+        paymentIntentID?: T;
+      };
+  billingAddress?:
+    | T
+    | {
+        title?: T;
+        firstName?: T;
+        lastName?: T;
+        company?: T;
+        addressLine1?: T;
+        addressLine2?: T;
+        city?: T;
+        state?: T;
+        postalCode?: T;
+        country?: T;
+        phone?: T;
+      };
+  status?: T;
+  customer?: T;
+  customerEmail?: T;
+  order?: T;
+  cart?: T;
+  amount?: T;
+  currency?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1901,65 +2170,6 @@ export interface NewsletterBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CallToActionBlock_select".
- */
-export interface CallToActionBlockSelect<T extends boolean = true> {
-  richText?: T;
-  links?:
-    | T
-    | {
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-              appearance?: T;
-            };
-        id?: T;
-      };
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContentBlock_select".
- */
-export interface ContentBlockSelect<T extends boolean = true> {
-  columns?:
-    | T
-    | {
-        size?: T;
-        richText?: T;
-        enableLink?: T;
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-              appearance?: T;
-            };
-        id?: T;
-      };
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "MediaBlock_select".
- */
-export interface MediaBlockSelect<T extends boolean = true> {
-  media?: T;
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ArchiveBlock_select".
  */
 export interface ArchiveBlockSelect<T extends boolean = true> {
@@ -2016,17 +2226,6 @@ export interface FormBlockSelect<T extends boolean = true> {
   introContent?: T;
   id?: T;
   blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories_select".
- */
-export interface CategoriesSelect<T extends boolean = true> {
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2208,210 +2407,38 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "addresses_select".
+ * via the `definition` "users_select".
  */
-export interface AddressesSelect<T extends boolean = true> {
-  customer?: T;
-  title?: T;
-  firstName?: T;
-  lastName?: T;
-  company?: T;
-  addressLine1?: T;
-  addressLine2?: T;
-  city?: T;
-  state?: T;
-  postalCode?: T;
-  country?: T;
-  phone?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "variants_select".
- */
-export interface VariantsSelect<T extends boolean = true> {
-  title?: T;
-  product?: T;
-  options?: T;
-  inventory?: T;
-  priceInUSDEnabled?: T;
-  priceInUSD?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "variantTypes_select".
- */
-export interface VariantTypesSelect<T extends boolean = true> {
-  label?: T;
+export interface UsersSelect<T extends boolean = true> {
+  email?: T;
+  googleSubject?: T;
   name?: T;
-  options?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "variantOptions_select".
- */
-export interface VariantOptionsSelect<T extends boolean = true> {
-  _variantOptions_options_order?: T;
-  variantType?: T;
-  label?: T;
-  value?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "products_select".
- */
-export interface ProductsSelect<T extends boolean = true> {
-  title?: T;
-  description?: T;
-  gallery?:
-    | T
-    | {
-        image?: T;
-        variantOption?: T;
-        id?: T;
-      };
-  layout?:
-    | T
-    | {
-        cta?: T | CallToActionBlockSelect<T>;
-        content?: T | ContentBlockSelect<T>;
-        mediaBlock?: T | MediaBlockSelect<T>;
-      };
-  inventory?: T;
-  enableVariants?: T;
-  variantTypes?: T;
-  variants?: T;
-  priceInUSDEnabled?: T;
-  priceInUSD?: T;
-  relatedProducts?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        image?: T;
-        description?: T;
-      };
-  categories?: T;
-  generateSlug?: T;
-  slug?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "carts_select".
- */
-export interface CartsSelect<T extends boolean = true> {
-  items?:
-    | T
-    | {
-        product?: T;
-        variant?: T;
-        quantity?: T;
-        id?: T;
-      };
-  secret?: T;
-  customer?: T;
-  purchasedAt?: T;
-  status?: T;
-  subtotal?: T;
-  currency?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "orders_select".
- */
-export interface OrdersSelect<T extends boolean = true> {
-  items?:
-    | T
-    | {
-        product?: T;
-        variant?: T;
-        quantity?: T;
-        id?: T;
-      };
-  shippingAddress?:
-    | T
-    | {
-        title?: T;
-        firstName?: T;
-        lastName?: T;
-        company?: T;
-        addressLine1?: T;
-        addressLine2?: T;
-        city?: T;
-        state?: T;
-        postalCode?: T;
-        country?: T;
-        phone?: T;
-      };
-  customer?: T;
-  customerEmail?: T;
-  transactions?: T;
-  status?: T;
-  amount?: T;
-  currency?: T;
-  accessToken?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "transactions_select".
- */
-export interface TransactionsSelect<T extends boolean = true> {
-  items?:
-    | T
-    | {
-        product?: T;
-        variant?: T;
-        quantity?: T;
-        id?: T;
-      };
-  paymentMethod?: T;
-  stripe?:
-    | T
-    | {
-        customerID?: T;
-        paymentIntentID?: T;
-      };
-  billingAddress?:
-    | T
-    | {
-        title?: T;
-        firstName?: T;
-        lastName?: T;
-        company?: T;
-        addressLine1?: T;
-        addressLine2?: T;
-        city?: T;
-        state?: T;
-        postalCode?: T;
-        country?: T;
-        phone?: T;
-      };
-  status?: T;
-  customer?: T;
-  customerEmail?: T;
-  order?: T;
+  roles?: T;
+  orders?: T;
   cart?: T;
-  amount?: T;
-  currency?: T;
+  addresses?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "login-tokens_select".
+ */
+export interface LoginTokensSelect<T extends boolean = true> {
+  tokenHash?: T;
+  email?: T;
+  expiresAt?: T;
+  usedAt?: T;
+  ipHash?: T;
+  userAgent?: T;
+  redirect?: T;
   updatedAt?: T;
   createdAt?: T;
 }
