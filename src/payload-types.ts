@@ -76,6 +76,7 @@ export interface Config {
     pages: Page;
     categories: Category;
     media: Media;
+    subscribers: Subscriber;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -109,6 +110,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    subscribers: SubscribersSelect<false> | SubscribersSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -490,6 +492,14 @@ export interface Page {
     media?: (number | null) | Media;
   };
   layout: (
+    | SabiHeroBlock
+    | ProductIntroBlock
+    | StepsBlock
+    | FeaturedProductBlock
+    | SlideshowBlock
+    | CollectionBlock
+    | PressBlock
+    | NewsletterBlock
     | CallToActionBlock
     | ContentBlock
     | MediaBlock
@@ -515,6 +525,398 @@ export interface Page {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SabiHeroBlock".
+ */
+export interface SabiHeroBlock {
+  eyebrow?: string | null;
+  headline: string;
+  /**
+   * Optional line under the headline.
+   */
+  subheading?: string | null;
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Portrait images for the collage. They are distributed across the columns in order; 12–18 works best.
+   */
+  tiles: {
+    image: number | Media;
+    id?: string | null;
+  }[];
+  columnsDesktop?: number | null;
+  columnsMobile?: number | null;
+  height?: ('screen' | 'tall') | null;
+  /**
+   * Dimming over the images, in %.
+   */
+  overlay?: number | null;
+  /**
+   * Scroll parallax strength (0 = off).
+   */
+  parallax?: number | null;
+  drift?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'sabiHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductIntroBlock".
+ */
+export interface ProductIntroBlock {
+  name: string;
+  /**
+   * Huge faint background word. Defaults to the name.
+   */
+  watermark?: string | null;
+  promise: string;
+  /**
+   * Muted second paragraph.
+   */
+  secondary?: string | null;
+  image: number | Media;
+  /**
+   * Small uppercase line in the image corner, e.g. "The last paradigm of computing".
+   */
+  tagline?: string | null;
+  /**
+   * Small spec cards over the image, e.g. "Custom sensors (1mm footprint)".
+   */
+  callouts?:
+    | {
+        image?: (number | null) | Media;
+        label: string;
+        detail?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  enableLink?: boolean | null;
+  link?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: number | Product;
+        } | null);
+    url?: string | null;
+    label: string;
+    /**
+     * Choose how the link should be rendered.
+     */
+    appearance?: ('default' | 'outline') | null;
+  };
+  /**
+   * Section background (from the theme palette).
+   */
+  background?: ('cream' | 'sand' | 'stone' | 'dark') | null;
+  /**
+   * Optional anchor id (letters, numbers, dashes) — link to it with "/#anchor".
+   */
+  anchor?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'productIntro';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StepsBlock".
+ */
+export interface StepsBlock {
+  /**
+   * Each line break becomes its own line.
+   */
+  heading: string;
+  intro?: string | null;
+  steps: {
+    /**
+     * Optional bold lead-in.
+     */
+    title?: string | null;
+    body: string;
+    id?: string | null;
+  }[];
+  numberStyle?: ('padded' | 'plain') | null;
+  /**
+   * Section background (from the theme palette).
+   */
+  background?: ('cream' | 'sand' | 'stone' | 'dark') | null;
+  /**
+   * Optional anchor id (letters, numbers, dashes) — link to it with "/#anchor".
+   */
+  anchor?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'steps';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeaturedProductBlock".
+ */
+export interface FeaturedProductBlock {
+  product: number | Product;
+  eyebrow?: string | null;
+  /**
+   * Defaults to the product title.
+   */
+  heading?: string | null;
+  /**
+   * Short pitch; defaults to the product meta description.
+   */
+  description?: string | null;
+  /**
+   * Short bullet points under the price.
+   */
+  highlights?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  imagePosition?: ('left' | 'right') | null;
+  buttonLabel?: string | null;
+  /**
+   * Section background (from the theme palette).
+   */
+  background?: ('cream' | 'sand' | 'stone' | 'dark') | null;
+  /**
+   * Optional anchor id (letters, numbers, dashes) — link to it with "/#anchor".
+   */
+  anchor?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featuredProduct';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SlideshowBlock".
+ */
+export interface SlideshowBlock {
+  slides: {
+    image: number | Media;
+    /**
+     * Optional portrait crop for phones.
+     */
+    imageMobile?: (number | null) | Media;
+    eyebrow?: string | null;
+    heading?: string | null;
+    subheading?: string | null;
+    links?:
+      | {
+          link: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null)
+              | ({
+                  relationTo: 'products';
+                  value: number | Product;
+                } | null);
+            url?: string | null;
+            label: string;
+            /**
+             * Choose how the link should be rendered.
+             */
+            appearance?: ('default' | 'outline') | null;
+          };
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Short label for bar / thumbnail pagination (defaults to the heading).
+     */
+    label?: string | null;
+    scheme?: ('light' | 'dark' | 'cream' | 'ink') | null;
+    position?:
+      | (
+          | 'top-left'
+          | 'top-center'
+          | 'top-right'
+          | 'middle-left'
+          | 'middle-center'
+          | 'middle-right'
+          | 'bottom-left'
+          | 'bottom-center'
+          | 'bottom-right'
+        )
+      | null;
+    positionMobile?: ('top' | 'middle' | 'bottom') | null;
+    alignment?: ('left' | 'center' | 'right') | null;
+    /**
+     * Image dimming in % (helps light text).
+     */
+    overlay?: number | null;
+    id?: string | null;
+  }[];
+  transition?: ('fade' | 'slide' | 'rise' | 'wipe') | null;
+  autoplay?: boolean | null;
+  interval?: number | null;
+  pauseOnHover?: boolean | null;
+  swipe?: boolean | null;
+  controls?: ('default' | 'progress-text' | 'arrows-play' | 'dots' | 'bars') | null;
+  progressStyle?: ('position' | 'timer') | null;
+  counterStyle?: ('slash' | 'divider') | null;
+  arrowStyle?: ('chevron' | 'long') | null;
+  container?: ('full' | 'inset') | null;
+  heightDesktop?: number | null;
+  heightMobile?: number | null;
+  radius?: number | null;
+  /**
+   * Optional anchor id (letters, numbers, dashes) — link to it with "/#anchor".
+   */
+  anchor?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'slideshow';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CollectionBlock".
+ */
+export interface CollectionBlock {
+  heading?: string | null;
+  intro?: string | null;
+  source?: ('latest' | 'category' | 'manual') | null;
+  category?: (number | null) | Category;
+  products?: (number | Product)[] | null;
+  display?: ('grid' | 'carousel') | null;
+  columns?: ('2' | '3' | '4') | null;
+  limit?: number | null;
+  enableLink?: boolean | null;
+  link?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: number | Product;
+        } | null);
+    url?: string | null;
+    label: string;
+  };
+  /**
+   * Section background (from the theme palette).
+   */
+  background?: ('cream' | 'sand' | 'stone' | 'dark') | null;
+  /**
+   * Optional anchor id (letters, numbers, dashes) — link to it with "/#anchor".
+   */
+  anchor?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'collection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PressBlock".
+ */
+export interface PressBlock {
+  heading?: string | null;
+  style?: ('cards' | 'quotes') | null;
+  items: {
+    publication: string;
+    date?: string | null;
+    quote: string;
+    /**
+     * Link to the article (opens in a new tab).
+     */
+    url?: string | null;
+    image?: (number | null) | Media;
+    /**
+     * Optional publication logo (quote row).
+     */
+    logo?: (number | null) | Media;
+    id?: string | null;
+  }[];
+  /**
+   * Section background (from the theme palette).
+   */
+  background?: ('cream' | 'sand' | 'stone' | 'dark') | null;
+  /**
+   * Optional anchor id (letters, numbers, dashes) — link to it with "/#anchor".
+   */
+  anchor?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'press';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NewsletterBlock".
+ */
+export interface NewsletterBlock {
+  heading: string;
+  body?: string | null;
+  placeholder?: string | null;
+  buttonLabel?: string | null;
+  /**
+   * Saved with each sign-up.
+   */
+  source?: string | null;
+  successMessage?: string | null;
+  layout?: ('minimal' | 'card') | null;
+  /**
+   * Section background (from the theme palette).
+   */
+  background?: ('cream' | 'sand' | 'stone' | 'dark') | null;
+  /**
+   * Optional anchor id (letters, numbers, dashes) — link to it with "/#anchor".
+   */
+  anchor?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'newsletter';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -609,21 +1011,6 @@ export interface ArchiveBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'archive';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
- */
-export interface Category {
-  id: number;
-  title: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1031,6 +1418,20 @@ export interface Address {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscribers".
+ */
+export interface Subscriber {
+  id: number;
+  email: string;
+  /**
+   * Where the sign-up came from (e.g. "waitlist", "footer").
+   */
+  source?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -1085,6 +1486,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'subscribers';
+        value: number | Subscriber;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1228,6 +1633,14 @@ export interface PagesSelect<T extends boolean = true> {
   layout?:
     | T
     | {
+        sabiHero?: T | SabiHeroBlockSelect<T>;
+        productIntro?: T | ProductIntroBlockSelect<T>;
+        steps?: T | StepsBlockSelect<T>;
+        featuredProduct?: T | FeaturedProductBlockSelect<T>;
+        slideshow?: T | SlideshowBlockSelect<T>;
+        collection?: T | CollectionBlockSelect<T>;
+        press?: T | PressBlockSelect<T>;
+        newsletter?: T | NewsletterBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
@@ -1249,6 +1662,242 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SabiHeroBlock_select".
+ */
+export interface SabiHeroBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  headline?: T;
+  subheading?: T;
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  tiles?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  columnsDesktop?: T;
+  columnsMobile?: T;
+  height?: T;
+  overlay?: T;
+  parallax?: T;
+  drift?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductIntroBlock_select".
+ */
+export interface ProductIntroBlockSelect<T extends boolean = true> {
+  name?: T;
+  watermark?: T;
+  promise?: T;
+  secondary?: T;
+  image?: T;
+  tagline?: T;
+  callouts?:
+    | T
+    | {
+        image?: T;
+        label?: T;
+        detail?: T;
+        id?: T;
+      };
+  enableLink?: T;
+  link?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+        appearance?: T;
+      };
+  background?: T;
+  anchor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StepsBlock_select".
+ */
+export interface StepsBlockSelect<T extends boolean = true> {
+  heading?: T;
+  intro?: T;
+  steps?:
+    | T
+    | {
+        title?: T;
+        body?: T;
+        id?: T;
+      };
+  numberStyle?: T;
+  background?: T;
+  anchor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeaturedProductBlock_select".
+ */
+export interface FeaturedProductBlockSelect<T extends boolean = true> {
+  product?: T;
+  eyebrow?: T;
+  heading?: T;
+  description?: T;
+  highlights?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  imagePosition?: T;
+  buttonLabel?: T;
+  background?: T;
+  anchor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SlideshowBlock_select".
+ */
+export interface SlideshowBlockSelect<T extends boolean = true> {
+  slides?:
+    | T
+    | {
+        image?: T;
+        imageMobile?: T;
+        eyebrow?: T;
+        heading?: T;
+        subheading?: T;
+        links?:
+          | T
+          | {
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                    appearance?: T;
+                  };
+              id?: T;
+            };
+        label?: T;
+        scheme?: T;
+        position?: T;
+        positionMobile?: T;
+        alignment?: T;
+        overlay?: T;
+        id?: T;
+      };
+  transition?: T;
+  autoplay?: T;
+  interval?: T;
+  pauseOnHover?: T;
+  swipe?: T;
+  controls?: T;
+  progressStyle?: T;
+  counterStyle?: T;
+  arrowStyle?: T;
+  container?: T;
+  heightDesktop?: T;
+  heightMobile?: T;
+  radius?: T;
+  anchor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CollectionBlock_select".
+ */
+export interface CollectionBlockSelect<T extends boolean = true> {
+  heading?: T;
+  intro?: T;
+  source?: T;
+  category?: T;
+  products?: T;
+  display?: T;
+  columns?: T;
+  limit?: T;
+  enableLink?: T;
+  link?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+      };
+  background?: T;
+  anchor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PressBlock_select".
+ */
+export interface PressBlockSelect<T extends boolean = true> {
+  heading?: T;
+  style?: T;
+  items?:
+    | T
+    | {
+        publication?: T;
+        date?: T;
+        quote?: T;
+        url?: T;
+        image?: T;
+        logo?: T;
+        id?: T;
+      };
+  background?: T;
+  anchor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NewsletterBlock_select".
+ */
+export interface NewsletterBlockSelect<T extends boolean = true> {
+  heading?: T;
+  body?: T;
+  placeholder?: T;
+  buttonLabel?: T;
+  source?: T;
+  successMessage?: T;
+  layout?: T;
+  background?: T;
+  anchor?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1397,6 +2046,16 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscribers_select".
+ */
+export interface SubscribersSelect<T extends boolean = true> {
+  email?: T;
+  source?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

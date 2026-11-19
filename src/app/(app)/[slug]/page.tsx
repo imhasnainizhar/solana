@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import { RenderBlocks } from '@/blocks/RenderBlocks'
+import { FULL_BLEED_BLOCKS, RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import configPromise from '@payload-config'
@@ -61,8 +61,12 @@ export default async function Page({ params }: Args) {
 
   const { hero, layout } = page
 
+  // Pages that open with a full-bleed block (or a template hero) sit under the floating navbar.
+  const underNav =
+    (hero?.type && hero.type !== 'none') || FULL_BLEED_BLOCKS.has(layout?.[0]?.blockType ?? '')
+
   return (
-    <article className="pt-16 pb-24">
+    <article className={underNav ? '' : 'pt-[calc(var(--sol-nav-h)+var(--sol-nav-inset)+2rem)]'}>
       <RenderHero {...hero} />
       <RenderBlocks blocks={layout} />
     </article>

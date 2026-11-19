@@ -332,3 +332,20 @@
     transform: none;
   }
 }
+
+/* slideshow counter roll (Elewind rollCounter) */
+@keyframes ssh-roll {
+  from {
+    transform: translate3d(0, 100%, 0);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [class*='ssh-roll'] {
+    animation: none !important;
+  }
+}

@@ -11,6 +11,14 @@ import { Content } from '@/blocks/Content/config'
 import { FormBlock } from '@/blocks/Form/config'
 import { MediaBlock } from '@/blocks/MediaBlock/config'
 import { hero } from '@/fields/hero'
+import { Collection } from '@/blocks/Collection/config'
+import { FeaturedProduct } from '@/blocks/FeaturedProduct/config'
+import { Newsletter } from '@/blocks/Newsletter/config'
+import { Press } from '@/blocks/Press/config'
+import { ProductIntro } from '@/blocks/ProductIntro/config'
+import { SabiHero } from '@/blocks/SabiHero/config'
+import { Slideshow } from '@/blocks/Slideshow/config'
+import { Steps } from '@/blocks/Steps/config'
 import { slugField } from 'payload'
 import { adminOrPublishedStatus } from '@/access/adminOrPublishedStatus'
 import {
@@ -88,6 +96,14 @@ export const Pages: CollectionConfig = {
               name: 'layout',
               type: 'blocks',
               blocks: [
+                SabiHero,
+                ProductIntro,
+                Steps,
+                FeaturedProduct,
+                Slideshow,
+                Collection,
+                Press,
+                Newsletter,
                 CallToAction,
                 Content,
                 MediaBlock,

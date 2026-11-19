@@ -19,6 +19,7 @@ import { fileURLToPath } from 'url'
 import { Categories } from '@/collections/Categories'
 import { Media } from '@/collections/Media'
 import { Pages } from '@/collections/Pages'
+import { Subscribers } from '@/collections/Subscribers'
 import { Users } from '@/collections/Users'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
@@ -40,7 +41,7 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [Users, Pages, Categories, Media],
+  collections: [Users, Pages, Categories, Media, Subscribers],
   db: postgresAdapter({
     pool: {
       // DATABASE_URI is canonical; POSTGRES_URL / DATABASE_URL are what the

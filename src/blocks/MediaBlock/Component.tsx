@@ -37,22 +37,22 @@ export const MediaBlock: React.FC<
       className={cn(
         '',
         {
-          container: enableGutter,
+          'sol-container': enableGutter,
         },
         className,
       )}
     >
       <Media
-        imgClassName={cn('border border-border rounded-[0.8rem]', imgClassName)}
+        imgClassName={cn('w-full rounded-[var(--sol-radius-lg)]', imgClassName)}
         resource={media}
         src={staticImage}
       />
       {caption && (
         <div
           className={cn(
-            'mt-6',
+            'mt-4 text-sm text-ink-soft',
             {
-              container: !disableInnerContainer,
+              'sol-container': !disableInnerContainer,
             },
             captionClassName,
           )}
