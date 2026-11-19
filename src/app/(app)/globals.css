@@ -222,17 +222,19 @@ html[data-theme='light'] {
   opacity: initial;
 }
 
-a,
-input,
-button,
-[tabindex] {
-  &:focus-visible {
-    outline: 2px solid var(--sol-accent);
-    outline-offset: 3px;
+@layer base {
+  a,
+  input,
+  button,
+  [tabindex] {
+    &:focus-visible {
+      outline: 2px solid var(--sol-accent);
+      outline-offset: 3px;
+    }
   }
-}
 
-/* Inside dark surfaces the focus ring flips to the light ink */
-[data-surface='dark'] :is(a, input, button, [tabindex]):focus-visible {
-  outline-color: var(--sol-on-hero);
+  /* Inside dark surfaces the focus ring flips to the light ink */
+  [data-surface='dark'] :is(a, input, button, [tabindex]):focus-visible {
+    outline-color: var(--sol-on-hero);
+  }
 }

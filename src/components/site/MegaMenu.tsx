@@ -127,7 +127,7 @@ export function MegaMenu({
           key={item.id}
           onMouseEnter={() => timer.current && clearTimeout(timer.current)}
         >
-          <div className="rounded-[28px] bg-paper/95 p-3 text-ink shadow-[var(--sol-shadow-float)] ring-1 ring-ink/5 backdrop-blur-xl">
+          <div className="rounded-[28px] bg-paper p-3 text-ink shadow-[var(--sol-shadow-float)] ring-1 ring-ink/5 backdrop-blur-xl">
             <div
               className="grid gap-3"
               style={{
@@ -167,7 +167,7 @@ export function MegaMenu({
                       href={item.href}
                       onClick={() => set(null)}
                     >
-                      View all {item.label.toLowerCase()} <ArrowRight aria-hidden className="h-3.5 w-3.5" />
+                      View all <ArrowRight aria-hidden className="h-3.5 w-3.5" />
                     </Link>
                   )}
                 </div>

@@ -74,7 +74,7 @@ export function ProductIntroBlock(props: Props & { id?: string }) {
             </div>
           )}
           {tagline && (
-            <span className="absolute bottom-5 right-5 z-10 max-w-[50%] text-right text-sm font-semibold uppercase tracking-[0.06em] text-white/60 mix-blend-overlay md:text-base">
+            <span className="absolute bottom-5 right-5 z-10 hidden max-w-[50%] sm:block text-right text-sm font-semibold uppercase tracking-[0.06em] text-white/60 mix-blend-overlay md:text-base">
               {tagline}
             </span>
           )}

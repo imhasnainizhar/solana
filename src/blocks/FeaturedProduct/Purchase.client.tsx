@@ -44,9 +44,16 @@ export function Purchase({ product, eyebrow, heading, description, highlights, i
   const optionsOf = (t: VariantType) =>
     (t.options?.docs || []).filter((o): o is VariantOption => typeof o === 'object')
 
-  // default selection: the first in-stock variant's options
+  // default selection: the first in-stock variant, in the admin's option order
   const [selected, setSelected] = useState<Record<number, number>>(() => {
-    const first = variants.find((v) => (v.inventory ?? 0) > 0) || variants[0]
+    const rank = (v: Variant) =>
+      types.reduce((acc, t) => {
+        const ids = optionsOf(t).map((o) => o.id)
+        const hit = v.options.map(optionId).find((id) => ids.includes(id))
+        return acc * 100 + (hit != null ? ids.indexOf(hit) : 99)
+      }, 0)
+    const ordered = [...variants].sort((a, b) => rank(a) - rank(b))
+    const first = ordered.find((v) => (v.inventory ?? 0) > 0) || ordered[0]
     const sel: Record<number, number> = {}
     if (!first) return sel
     for (const t of types) {
@@ -96,7 +103,12 @@ export function Purchase({ product, eyebrow, heading, description, highlights, i
   const muted = dark ? 'text-on-hero/65' : 'text-ink-soft'
 
   return (
-    <div className={cn('grid items-start gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-16', imageRight && 'lg:[&>*:first-child]:order-2')}>
+    <div
+      className={cn(
+        'grid grid-cols-[minmax(0,1fr)] items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16',
+        imageRight && 'lg:[&>*:first-child]:order-2',
+      )}
+    >
       {/* gallery */}
       <div className="lg:sticky lg:top-[calc(var(--sol-nav-h)+2rem)]">
         <div className={cn('relative aspect-[4/5] overflow-hidden rounded-[24px]', dark ? 'bg-white/5' : 'bg-stone')}>

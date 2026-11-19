@@ -40,7 +40,7 @@ export function ProductCard({ product, className, sizes }: { product: Product; c
           />
         )}
       </div>
-      <div className="mt-4 flex items-baseline justify-between gap-4">
+      <div className="mt-3 flex flex-col gap-1 sm:mt-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
         <h3 className="text-[15px] leading-tight">{product.title}</h3>
         {low !== null && (
           <span className="text-[15px] text-ink-soft tabular-nums">

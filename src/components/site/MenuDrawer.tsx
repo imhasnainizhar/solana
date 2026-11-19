@@ -150,7 +150,7 @@ export function MenuDrawer({ items, wordmark }: { items: NavItem[]; wordmark: st
                 onClick={close}
                 style={{ ['--i' as string]: 0 }}
               >
-                <RollText>{`All ${item.label.toLowerCase()}`}</RollText>
+                <RollText>View all</RollText>
               </Link>
               {item.groups.map((group, gi) => (
                 <div className="mt-6" key={group.title + gi}>

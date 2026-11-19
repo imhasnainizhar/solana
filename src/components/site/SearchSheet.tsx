@@ -43,7 +43,7 @@ export function SearchSheet({ items }: { items: NavItem[] }) {
         </label>
         <input
           autoComplete="off"
-          className="h-12 min-w-0 flex-1 bg-transparent font-display text-2xl tracking-[-0.02em] outline-none placeholder:text-ink-muted md:text-3xl"
+          className="h-12 min-w-0 flex-1 bg-transparent font-display text-2xl tracking-[-0.02em] outline-none focus-visible:outline-none placeholder:text-ink-muted md:text-3xl"
           id="site-search"
           name="q"
           placeholder="Search the store"

@@ -11,9 +11,9 @@ import Link from 'next/link'
 import React from 'react'
 
 const gridCols: Record<string, string> = {
-  '2': 'sm:grid-cols-2',
-  '3': 'sm:grid-cols-2 lg:grid-cols-3',
-  '4': 'sm:grid-cols-2 lg:grid-cols-4',
+  '2': 'grid-cols-2',
+  '3': 'grid-cols-2 lg:grid-cols-3',
+  '4': 'grid-cols-2 lg:grid-cols-4',
 }
 const railCols: Record<string, string> = {
   '2': 'auto-cols-[82%] sm:auto-cols-[calc((100%-1.25rem)/2)]',
@@ -63,7 +63,7 @@ export async function CollectionBlock(props: Props & { id?: string }) {
             ))}
           </ul>
         ) : (
-          <ul className={cn('grid grid-cols-1 gap-x-5 gap-y-10', gridCols[cols])}>
+          <ul className={cn('grid gap-x-3 gap-y-10 sm:gap-x-5', gridCols[cols])}>
             {products.map((p, i) => (
               <Reveal as="li" delay={(i % Number(cols)) * 80} key={p.id}>
                 <ProductCard product={p} />
