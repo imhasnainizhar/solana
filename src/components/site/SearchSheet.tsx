@@ -21,7 +21,7 @@ export function SearchSheet({ items }: { items: NavItem[] }) {
   return (
     <Sheet
       anchor="top"
-      className="inset-x-2 top-2 mx-auto max-w-[760px] rounded-[28px]"
+      className="inset-x-2 top-2 mx-auto max-w-[760px] rounded-[calc(28px*var(--sol-radius-scale))]"
       initialFocus={input}
       label="Search"
       onClose={ui.close}

@@ -111,7 +111,7 @@ export function Purchase({ product, eyebrow, heading, description, highlights, i
     >
       {/* gallery */}
       <div className="lg:sticky lg:top-[calc(var(--sol-nav-h)+2rem)]">
-        <div className={cn('relative aspect-[4/5] overflow-hidden rounded-[24px]', dark ? 'bg-white/5' : 'bg-stone')}>
+        <div className={cn('relative aspect-[4/5] overflow-hidden rounded-[calc(24px*var(--sol-radius-scale))]', dark ? 'bg-white/5' : 'bg-stone')}>
           {current && (
             <Image
               alt={current.alt}
@@ -131,7 +131,7 @@ export function Purchase({ product, eyebrow, heading, description, highlights, i
                 aria-label={`Show image ${i + 1}`}
                 aria-selected={i === active}
                 className={cn(
-                  'relative aspect-square w-[72px] shrink-0 overflow-hidden rounded-[14px] ring-offset-2 transition',
+                  'relative aspect-square w-[72px] shrink-0 overflow-hidden rounded-[calc(14px*var(--sol-radius-scale))] ring-offset-2 transition',
                   dark ? 'bg-white/5 ring-offset-hero' : 'bg-stone ring-offset-cream',
                   i === active ? (dark ? 'ring-1 ring-on-hero' : 'ring-1 ring-ink') : 'opacity-70 hover:opacity-100',
                 )}

@@ -154,10 +154,13 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: max(0px, calc(var(--radius) - 4px));
+  --radius-md: max(0px, calc(var(--radius) - 2px));
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(16px * var(--sol-radius-scale));
+  --radius-3xl: calc(24px * var(--sol-radius-scale));
+  --radius-button: var(--sol-radius-button);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -182,6 +185,7 @@
   --color-hero: var(--sol-hero);
   --color-on-hero: var(--sol-on-hero);
   --color-brand: var(--sol-accent);
+  --color-on-brand: var(--sol-on-accent);
   --color-brand-warm: var(--sol-accent-warm);
   --radius-tile: var(--sol-radius-tile);
   --radius-card: var(--sol-radius-lg);
@@ -211,15 +215,6 @@
     background: var(--sol-ink);
     color: var(--sol-cream);
   }
-}
-
-html {
-  opacity: 0;
-}
-
-html[data-theme='dark'],
-html[data-theme='light'] {
-  opacity: initial;
 }
 
 @layer base {

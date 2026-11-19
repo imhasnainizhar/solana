@@ -3,10 +3,9 @@
  * and motion are defined. Everything else (Tailwind utilities via `@theme inline`
  * in globals.css, block components, shadcn primitives) reads these variables.
  *
- * Phase 3 (Theme global / build mode) overrides these on <html> per preset,
- * e.g. `[data-preset='midnight'] { --sol-cream: …; }` or an inline style tag.
- *
- * Default preset: "Cream" (sabi-style warm ivory palette with a dark hero).
+ * The Theme global (admin → Settings → Theme) overrides the palette, fonts and
+ * the *-scale / density knobs below via a server-rendered `:root{…}` style tag
+ * (see src/theme/css.ts). The values here are the "Sabi Cream" defaults.
  */
 :root {
   /* ── Palette ─────────────────────────────────────────────────────────── */
@@ -20,7 +19,8 @@
   --sol-paper: #fffdf9; /* raised surfaces (drawers, popovers) */
   --sol-hero: #0b0b0a; /* dark hero / dark sections */
   --sol-on-hero: #f7f4ee; /* text on dark */
-  --sol-accent: #283746; /* denim — step numbers, focus */
+  --sol-accent: #283746; /* denim — step numbers, focus, accent sections */
+  --sol-on-accent: #f7f4ee; /* text on accent */
   --sol-accent-warm: #e1643c; /* badges, sale, highlights */
   --sol-success: #3f6b4a;
   --sol-danger: #b4432c;
@@ -40,19 +40,26 @@
   --sol-text-small: 0.8125rem;
   --sol-text-eyebrow: 0.75rem;
 
+  /* ── Theme knobs (overridden by the Theme global) ───────────────────── */
+  --sol-radius-scale: 1; /* 0 = square … 1.5 = extra round */
+  --sol-radius-button: 999px; /* pill | rounded | square */
+  --sol-density: 1; /* section spacing multiplier */
+  --sol-hero-overlay: 1; /* multiplier for hero / slideshow image dimming */
+
   /* ── Radius ──────────────────────────────────────────────────────────── */
-  --sol-radius-xs: 8px;
-  --sol-radius-sm: 12px;
-  --sol-radius-md: 18px;
-  --sol-radius-lg: 24px;
-  --sol-radius-xl: 32px;
+  --sol-radius-xs: calc(8px * var(--sol-radius-scale));
+  --sol-radius-sm: calc(12px * var(--sol-radius-scale));
+  --sol-radius-md: calc(18px * var(--sol-radius-scale));
+  --sol-radius-lg: calc(24px * var(--sol-radius-scale));
+  --sol-radius-xl: calc(32px * var(--sol-radius-scale));
   --sol-radius-pill: 999px;
-  --sol-radius-tile: clamp(4px, 1vw, 10px); /* hero collage tiles */
-  --sol-radius-section: 40px; /* rounded bottom of the hero */
+  --sol-radius-tile: calc(clamp(4px, 1vw, 10px) * var(--sol-radius-scale)); /* hero collage tiles */
+  --sol-radius-section: calc(40px * var(--sol-radius-scale)); /* rounded bottom of the hero */
 
   /* ── Spacing / layout ───────────────────────────────────────────────── */
-  --sol-gutter: clamp(1.25rem, 4.5vw, 5rem);
-  --sol-section-y: clamp(4.5rem, 9vw, 8.5rem);
+  --sol-gutter: calc(clamp(1.25rem, 4.5vw, 5rem) * (0.5 + var(--sol-density) / 2));
+  --sol-section-y: calc(clamp(4.5rem, 9vw, 8.5rem) * var(--sol-density));
+  --sol-section-y-sm: calc(clamp(4rem, 7vw, 6rem) * var(--sol-density)); /* compact sections */
   --sol-maxw: 72rem;
   --sol-maxw-wide: 90rem;
   --sol-nav-h: 3.5rem;

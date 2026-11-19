@@ -51,7 +51,7 @@
     gap: 0.5rem;
     min-height: 3rem;
     padding: 0 1.5rem;
-    border-radius: var(--sol-radius-pill);
+    border-radius: var(--sol-radius-button);
     font-size: 0.9375rem;
     font-weight: 500;
     letter-spacing: -0.005em;
@@ -87,9 +87,9 @@
   }
   .sol-btn-light {
     background: var(--sol-on-hero);
-    color: var(--sol-ink);
+    color: var(--sol-hero);
     &:hover {
-      background: #fff;
+      background: color-mix(in srgb, var(--sol-on-hero) 88%, var(--sol-hero));
     }
   }
   .sol-icon-btn {
@@ -103,6 +103,12 @@
       background: color-mix(in srgb, currentColor 10%, transparent);
     }
   }
+}
+
+/* Accent colour-scheme sections: "on dark" tokens point at the accent's contrast colour. */
+.sol-scheme-accent {
+  --sol-on-hero: var(--sol-on-accent);
+  --sol-hero: var(--sol-accent);
 }
 
 /* ── Floating navbar ─────────────────────────────────────────────────────── */
@@ -305,6 +311,41 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* Theme "motion" setting: reduced = same as the OS preference, off = no motion at all. */
+:root[data-motion='off'] *,
+:root[data-motion='off'] *::before,
+:root[data-motion='off'] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+:root:is([data-motion='reduced'], [data-motion='off'])
+  :is(
+    .sol-nav,
+    .sol-nav-pill,
+    .sol-overlay,
+    .sol-sheet,
+    .sol-reveal,
+    .sol-submenu,
+    .sol-sub-item,
+    .sol-mega,
+    .sol-mega-col,
+    .sol-roll-char,
+    .sol-morph,
+    .sol-dock,
+    .sol-inview
+  ) {
+  transition-duration: 1ms !important;
+  transition-delay: 0s !important;
+}
+:root:is([data-motion='reduced'], [data-motion='off']) :is(.sol-drift, [class*='ssh-roll']) {
+  animation: none !important;
+}
+:root:is([data-motion='reduced'], [data-motion='off']) .sol-inview {
+  opacity: 1;
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

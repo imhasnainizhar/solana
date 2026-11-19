@@ -14,7 +14,12 @@ const SPEEDS = [0.16, -0.1, 0.26, -0.06, 0.2, -0.14, 0.12, -0.2]
 const HEIGHTS = [78, 62, 90, 70, 84, 58, 96, 66] // tile heights in svh
 const OFFSETS = [-6, -38, -14, -2, -26, -48, -20, -10] // column start offsets in svh
 
-type Column = { tiles: { img: ImageData; h: number; key: string }[]; offset: number; speed: number; width: number }
+type Column = {
+  tiles: { img: ImageData; h: number; key: string }[]
+  offset: number
+  speed: number
+  width: number
+}
 
 function buildColumns(images: ImageData[], count: number, minHeight: number): Column[] {
   if (images.length === 0) return []
@@ -39,11 +44,22 @@ function buildColumns(images: ImageData[], count: number, minHeight: number): Co
   })
 }
 
-function Collage({ columns, drift, className }: { columns: Column[]; drift: boolean; className?: string }) {
+function Collage({
+  columns,
+  drift,
+  className,
+}: {
+  columns: Column[]
+  drift: boolean
+  className?: string
+}) {
   return (
     <div
       aria-hidden
-      className={cn('absolute inset-0 gap-[clamp(4px,0.78vw,10px)] px-[clamp(4px,0.78vw,10px)]', className)}
+      className={cn(
+        'absolute inset-0 gap-[clamp(4px,0.78vw,10px)] px-[clamp(4px,0.78vw,10px)]',
+        className,
+      )}
     >
       {columns.map((col, ci) => (
         <div className="relative min-w-0" key={ci} style={{ flex: col.width }}>
@@ -156,15 +172,24 @@ export function SabiHeroBlock(props: Props & { id?: string }) {
     >
       <Collage className="hidden md:flex" columns={desktop} drift={drift !== false} />
       <Collage className="flex md:hidden" columns={mobile} drift={drift !== false} />
-      <div aria-hidden className="pointer-events-none absolute inset-0 bg-black" style={{ opacity: dim }} />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-black"
+        style={{ opacity: `min(1, calc(${dim} * var(--sol-hero-overlay)))` }}
+      />
 
       <div className="pointer-events-none sticky top-0 z-10 flex h-svh flex-col items-center justify-center px-5 text-center">
         {eyebrow && <p className="sol-eyebrow mb-5 opacity-80">{eyebrow}</p>}
-        <h1 className="sol-display text-balance" style={{ fontSize: 'var(--sol-text-hero)', lineHeight: 1 }}>
+        <h1
+          className="sol-display text-balance"
+          style={{ fontSize: 'var(--sol-text-hero)', lineHeight: 1 }}
+        >
           {headline}
         </h1>
         {subheading && (
-          <p className="mt-6 max-w-[34rem] text-balance text-[17px] leading-[1.45] opacity-80 md:text-lg">{subheading}</p>
+          <p className="mt-6 max-w-[34rem] text-balance text-[17px] leading-[1.45] opacity-80 md:text-lg">
+            {subheading}
+          </p>
         )}
         {links && links.length > 0 && (
           <div className="pointer-events-auto mt-9 flex flex-wrap justify-center gap-3">

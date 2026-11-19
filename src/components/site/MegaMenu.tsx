@@ -127,7 +127,7 @@ export function MegaMenu({
           key={item.id}
           onMouseEnter={() => timer.current && clearTimeout(timer.current)}
         >
-          <div className="rounded-[28px] bg-paper p-3 text-ink shadow-[var(--sol-shadow-float)] ring-1 ring-ink/5 backdrop-blur-xl">
+          <div className="rounded-[calc(28px*var(--sol-radius-scale))] bg-paper p-3 text-ink shadow-[var(--sol-shadow-float)] ring-1 ring-ink/5 backdrop-blur-xl">
             <div
               className="grid gap-3"
               style={{
@@ -179,7 +179,7 @@ export function MegaMenu({
                 >
                   {item.featured.map((f, fi) => (
                     <Link
-                      className="sol-mega-col group relative block min-h-[300px] overflow-hidden rounded-[20px] bg-stone"
+                      className="sol-mega-col group relative block min-h-[300px] overflow-hidden rounded-[calc(20px*var(--sol-radius-scale))] bg-stone"
                       href={f.href}
                       key={f.title + fi}
                       onClick={() => set(null)}

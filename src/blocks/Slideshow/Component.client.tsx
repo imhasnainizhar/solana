@@ -119,36 +119,33 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
   }, [])
 
   // ── Per-slide entrance: media zoom + text rise (zoomMedia / revealText) ──────
-  const stage = useCallback(
-    (next: number, prev: number | null, textDelay: number) => {
-      if (reducedMotion()) return
-      const el = slideRefs.current[next]
-      const media = el?.querySelector<HTMLElement>('[data-ssh-media]')
-      media?.animate([{ transform: 'scale(1.2)' }, { transform: 'scale(1)' }], {
-        duration: 900,
+  const stage = useCallback((next: number, prev: number | null, textDelay: number) => {
+    if (reducedMotion()) return
+    const el = slideRefs.current[next]
+    const media = el?.querySelector<HTMLElement>('[data-ssh-media]')
+    media?.animate([{ transform: 'scale(1.2)' }, { transform: 'scale(1)' }], {
+      duration: 900,
+      easing: EASE_ZOOM,
+      fill: 'forwards',
+    })
+    if (prev !== null && prev !== next) {
+      const prevMedia = slideRefs.current[prev]?.querySelector<HTMLElement>('[data-ssh-media]')
+      prevMedia?.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }], {
+        duration: 2700,
         easing: EASE_ZOOM,
         fill: 'forwards',
       })
-      if (prev !== null && prev !== next) {
-        const prevMedia = slideRefs.current[prev]?.querySelector<HTMLElement>('[data-ssh-media]')
-        prevMedia?.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }], {
-          duration: 2700,
-          easing: EASE_ZOOM,
-          fill: 'forwards',
-        })
-      }
-      el?.querySelectorAll<HTMLElement>('[data-ssh-row]').forEach((row, i) => {
-        row.animate(
-          [
-            { opacity: 0, transform: 'translate3d(0, 60px, 0)' },
-            { opacity: 1, transform: 'none' },
-          ],
-          { duration: 800, delay: textDelay + i * 100, easing: EASE_TEXT, fill: 'both' },
-        )
-      })
-    },
-    [],
-  )
+    }
+    el?.querySelectorAll<HTMLElement>('[data-ssh-row]').forEach((row, i) => {
+      row.animate(
+        [
+          { opacity: 0, transform: 'translate3d(0, 60px, 0)' },
+          { opacity: 1, transform: 'none' },
+        ],
+        { duration: 800, delay: textDelay + i * 100, easing: EASE_TEXT, fill: 'both' },
+      )
+    })
+  }, [])
 
   // ── Transition between two slides ───────────────────────────────────────────
   const go = useCallback(
@@ -183,13 +180,26 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
       if (effect === 'fade') {
         run.push(inEl.animate([{ opacity: 0 }, { opacity: 1 }], { ...opts, easing: 'ease' }))
       } else if (effect === 'slide') {
-        run.push(inEl.animate([{ transform: `translate3d(${dir * 100}%,0,0)` }, { transform: 'none' }], opts))
-        run.push(outEl.animate([{ transform: 'none' }, { transform: `translate3d(${-dir * 100}%,0,0)` }], opts))
+        run.push(
+          inEl.animate(
+            [{ transform: `translate3d(${dir * 100}%,0,0)` }, { transform: 'none' }],
+            opts,
+          ),
+        )
+        run.push(
+          outEl.animate(
+            [{ transform: 'none' }, { transform: `translate3d(${-dir * 100}%,0,0)` }],
+            opts,
+          ),
+        )
       } else if (effect === 'rise') {
         const y = dir > 0 ? 104 : -104
         run.push(
           inEl.animate(
-            [{ transform: `translate3d(0, ${y}%, 0) rotate(${2 * dir}deg) scale(1.04)` }, { transform: 'none' }],
+            [
+              { transform: `translate3d(0, ${y}%, 0) rotate(${2 * dir}deg) scale(1.04)` },
+              { transform: 'none' },
+            ],
             opts,
           ),
         )
@@ -197,7 +207,10 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
           outEl.animate(
             [
               { transform: 'none', filter: 'brightness(1)' },
-              { transform: `translate3d(0, ${-30 * dir}%, -1px) rotate(${-2 * dir}deg) scale(1.17)`, filter: 'brightness(0.45)' },
+              {
+                transform: `translate3d(0, ${-30 * dir}%, -1px) rotate(${-2 * dir}deg) scale(1.17)`,
+                filter: 'brightness(0.45)',
+              },
             ],
             opts,
           ),
@@ -207,9 +220,19 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
         const start = dir > 0 ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)'
         run.push(inEl.animate([{ clipPath: start }, { clipPath: 'inset(0 0 0 0)' }], opts))
         if (inMedia)
-          run.push(inMedia.animate([{ transform: `translate3d(${dir * 12.5}%,0,0)` }, { transform: 'none' }], opts))
+          run.push(
+            inMedia.animate(
+              [{ transform: `translate3d(${dir * 12.5}%,0,0)` }, { transform: 'none' }],
+              opts,
+            ),
+          )
         if (outMedia)
-          run.push(outMedia.animate([{ transform: 'none' }, { transform: `translate3d(${-dir * 25}%,0,0)` }], opts))
+          run.push(
+            outMedia.animate(
+              [{ transform: 'none' }, { transform: `translate3d(${-dir * 25}%,0,0)` }],
+              opts,
+            ),
+          )
       }
       animations.current = run
       stage(to, from, effect === 'wipe' ? 600 : effect === 'rise' ? 500 : 250)
@@ -223,7 +246,10 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
       }, d + 30)
 
       rootRef.current?.dispatchEvent(
-        new CustomEvent('slideshow:change', { bubbles: true, detail: { index: to, total, id: sectionId } }),
+        new CustomEvent('slideshow:change', {
+          bubbles: true,
+          detail: { index: to, total, id: sectionId },
+        }),
       )
     },
     [effect, stage, tick, timerMode, total, sectionId],
@@ -261,7 +287,9 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
     if (!autoplay || total < 2 || reducedMotion()) return
     const el = rootRef.current
     if (!el) return
-    const io = new IntersectionObserver((entries) => entries.forEach((e) => hold('offscreen', !e.isIntersecting)))
+    const io = new IntersectionObserver((entries) =>
+      entries.forEach((e) => hold('offscreen', !e.isIntersecting)),
+    )
     io.observe(el)
     let last = performance.now()
     let frame = requestAnimationFrame(function loop(now) {
@@ -289,7 +317,12 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
       const f = document.activeElement as HTMLElement | null
       hold(
         'focus',
-        Boolean(f && rootRef.current?.contains(f) && f.matches(':focus-visible') && !f.matches('[data-ssh-play]')),
+        Boolean(
+          f &&
+          rootRef.current?.contains(f) &&
+          f.matches(':focus-visible') &&
+          !f.matches('[data-ssh-play]'),
+        ),
       )
     })
   }
@@ -331,7 +364,10 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
     <section
       aria-label="Featured slideshow"
       aria-roledescription="carousel"
-      className={cn('relative', inset ? 'bg-cream px-[clamp(0.5rem,1.2vw,1rem)] py-[clamp(0.5rem,1.2vw,1rem)]' : '')}
+      className={cn(
+        'relative',
+        inset ? 'bg-cream px-[clamp(0.5rem,1.2vw,1rem)] py-[clamp(0.5rem,1.2vw,1rem)]' : '',
+      )}
       data-nav-theme={onLight ? 'dark' : undefined}
       id={sectionId}
       onBlur={onFocusChange}
@@ -385,16 +421,36 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
           >
             {(controls === 'default' || controls === 'progress-text') && (
               <div className="pointer-events-auto ml-auto flex items-center gap-4">
-                <Counter current={pad(index + 1)} divider={counterStyle === 'divider'} total={pad(total)} />
-                <span aria-hidden className="relative h-px w-16 overflow-hidden bg-current/25 md:w-24">
-                  <span className="absolute inset-0 origin-left bg-current" style={{ transform: 'scaleX(var(--ssh-fill, 0))' }} />
+                <Counter
+                  current={pad(index + 1)}
+                  divider={counterStyle === 'divider'}
+                  total={pad(total)}
+                />
+                <span
+                  aria-hidden
+                  className="relative h-px w-16 overflow-hidden bg-current/25 md:w-24"
+                >
+                  <span
+                    className="absolute inset-0 origin-left bg-current"
+                    style={{ transform: 'scaleX(var(--ssh-fill, 0))' }}
+                  />
                 </span>
                 {controls === 'default' && (
                   <span className="flex gap-2">
-                    <button aria-label="Previous slide" className={arrowBtn} onClick={prev} type="button">
+                    <button
+                      aria-label="Previous slide"
+                      className={arrowBtn}
+                      onClick={prev}
+                      type="button"
+                    >
                       <ArrowPrev aria-hidden className="h-4 w-4" />
                     </button>
-                    <button aria-label="Next slide" className={arrowBtn} onClick={next} type="button">
+                    <button
+                      aria-label="Next slide"
+                      className={arrowBtn}
+                      onClick={next}
+                      type="button"
+                    >
                       <ArrowNext aria-hidden className="h-4 w-4" />
                     </button>
                   </span>
@@ -404,7 +460,12 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
 
             {controls === 'arrows-play' && (
               <div className="pointer-events-auto ml-auto flex items-center gap-2">
-                <button aria-label="Previous slide" className={arrowBtn} onClick={prev} type="button">
+                <button
+                  aria-label="Previous slide"
+                  className={arrowBtn}
+                  onClick={prev}
+                  type="button"
+                >
                   <ArrowPrev aria-hidden className="h-4 w-4" />
                 </button>
                 {autoplay && (
@@ -417,7 +478,15 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
                     type="button"
                   >
                     <svg aria-hidden className="absolute inset-0 -rotate-90" viewBox="0 0 44 44">
-                      <circle cx="22" cy="22" fill="none" opacity="0.25" r="20.5" stroke="currentColor" strokeWidth="1.5" />
+                      <circle
+                        cx="22"
+                        cy="22"
+                        fill="none"
+                        opacity="0.25"
+                        r="20.5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      />
                       <circle
                         cx="22"
                         cy="22"
@@ -430,7 +499,11 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
                         style={{ strokeDashoffset: 'calc(1 - var(--ssh-fill, 0))' }}
                       />
                     </svg>
-                    {paused ? <Play aria-hidden className="h-3.5 w-3.5" /> : <Pause aria-hidden className="h-3.5 w-3.5" />}
+                    {paused ? (
+                      <Play aria-hidden className="h-3.5 w-3.5" />
+                    ) : (
+                      <Pause aria-hidden className="h-3.5 w-3.5" />
+                    )}
                   </button>
                 )}
                 <button aria-label="Next slide" className={arrowBtn} onClick={next} type="button">
@@ -440,7 +513,11 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
             )}
 
             {controls === 'dots' && (
-              <div className="pointer-events-auto mx-auto flex items-center gap-2" role="group" aria-label="Choose slide">
+              <div
+                className="pointer-events-auto mx-auto flex items-center gap-2"
+                role="group"
+                aria-label="Choose slide"
+              >
                 {slides.map((s, i) => (
                   <button
                     aria-current={i === index ? 'true' : undefined}
@@ -457,7 +534,10 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
                       )}
                     >
                       {i === index && (
-                        <span className="absolute inset-0 origin-left bg-current" style={{ transform: `scaleX(${timerMode ? 'var(--ssh-fill, 0)' : 1})` }} />
+                        <span
+                          className="absolute inset-0 origin-left bg-current"
+                          style={{ transform: `scaleX(${timerMode ? 'var(--ssh-fill, 0)' : 1})` }}
+                        />
                       )}
                     </span>
                   </button>
@@ -466,11 +546,19 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
             )}
 
             {controls === 'bars' && (
-              <div className="pointer-events-auto grid w-full gap-3 md:gap-5" role="group" aria-label="Choose slide" style={{ gridTemplateColumns: `repeat(${total}, minmax(0,1fr))` }}>
+              <div
+                className="pointer-events-auto grid w-full gap-3 md:gap-5"
+                role="group"
+                aria-label="Choose slide"
+                style={{ gridTemplateColumns: `repeat(${total}, minmax(0,1fr))` }}
+              >
                 {slides.map((s, i) => (
                   <button
                     aria-current={i === index ? 'true' : undefined}
-                    className={cn('text-left transition-opacity', i === index ? 'opacity-100' : 'opacity-60 hover:opacity-90')}
+                    className={cn(
+                      'text-left transition-opacity',
+                      i === index ? 'opacity-100' : 'opacity-60 hover:opacity-90',
+                    )}
                     key={s.id || i}
                     onClick={() => go(i)}
                     type="button"
@@ -483,7 +571,9 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
                         }}
                       />
                     </span>
-                    <span className="mt-2.5 hidden truncate text-[13px] md:block">{s.label || s.heading || `Slide ${i + 1}`}</span>
+                    <span className="mt-2.5 hidden truncate text-[13px] md:block">
+                      {s.label || s.heading || `Slide ${i + 1}`}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -496,7 +586,15 @@ export function SlideshowClient(props: SlideshowBlock & { id?: string }) {
 }
 
 /** "01 | 03" counter — the old number rolls up and out while the new one rolls in. */
-function Counter({ current, total, divider }: { current: string; total: string; divider: boolean }) {
+function Counter({
+  current,
+  total,
+  divider,
+}: {
+  current: string
+  total: string
+  divider: boolean
+}) {
   return (
     <span className="flex items-center gap-2 text-[13px] tabular-nums">
       <span aria-hidden className="relative inline-grid h-[1.2em] overflow-hidden">
@@ -571,8 +669,8 @@ const SlideView = React.forwardRef<
           className="absolute inset-0"
           style={{
             background: light
-              ? `linear-gradient(180deg, rgb(0 0 0 / ${dim * 0.5}) 0%, rgb(0 0 0 / ${dim}) 100%)`
-              : `rgb(250 247 241 / ${dim * 0.6})`,
+              ? `linear-gradient(180deg, rgb(0 0 0 / calc(${dim * 0.5} * var(--sol-hero-overlay))) 0%, rgb(0 0 0 / calc(${dim} * var(--sol-hero-overlay))) 100%)`
+              : `rgb(250 247 241 / calc(${dim * 0.6} * var(--sol-hero-overlay)))`,
           }}
         />
       )}
@@ -588,7 +686,7 @@ const SlideView = React.forwardRef<
             'flex max-w-[36rem] flex-col gap-4',
             alignClass[slide.alignment || 'left'],
             light ? 'text-white' : 'text-ink',
-            panel && 'rounded-[24px] p-7 backdrop-blur-xl md:p-9',
+            panel && 'rounded-[calc(24px*var(--sol-radius-scale))] p-7 backdrop-blur-xl md:p-9',
             scheme === 'cream' && 'bg-cream/85 text-ink',
             scheme === 'ink' && 'bg-ink/80 text-on-hero',
           )}
@@ -599,19 +697,29 @@ const SlideView = React.forwardRef<
             </p>
           )}
           {slide.heading && (
-            <h3 className="sol-display text-[clamp(2.25rem,5.5vw,4.75rem)] text-balance" data-ssh-row>
+            <h3
+              className="sol-display text-[clamp(2.25rem,5.5vw,4.75rem)] text-balance"
+              data-ssh-row
+            >
               {slide.heading}
             </h3>
           )}
           {slide.subheading && (
-            <p className="max-w-[30rem] text-[16px] leading-[1.5] opacity-85 md:text-[17px]" data-ssh-row>
+            <p
+              className="max-w-[30rem] text-[16px] leading-[1.5] opacity-85 md:text-[17px]"
+              data-ssh-row
+            >
               {slide.subheading}
             </p>
           )}
           {slide.links && slide.links.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-3" data-ssh-row>
               {slide.links.map(({ link, id }) => (
-                <ButtonLink key={id} link={link} tone={light || scheme === 'ink' ? 'light' : 'dark'} />
+                <ButtonLink
+                  key={id}
+                  link={link}
+                  tone={light || scheme === 'ink' ? 'light' : 'dark'}
+                />
               ))}
             </div>
           )}

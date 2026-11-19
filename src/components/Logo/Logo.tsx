@@ -7,7 +7,7 @@ export const Logo = () => {
   return (
     <span
       style={{
-        fontFamily: 'var(--font-inter-tight), system-ui, sans-serif',
+        fontFamily: 'var(--sol-font-display, system-ui, sans-serif)',
         fontSize: 34,
         letterSpacing: '-0.04em',
         lineHeight: 1,

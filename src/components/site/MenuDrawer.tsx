@@ -35,7 +35,7 @@ export function MenuDrawer({ items, wordmark }: { items: NavItem[]; wordmark: st
   return (
     <Sheet
       anchor="left"
-      className="inset-y-2 left-2 w-[min(440px,calc(100%-1rem))] rounded-[28px]"
+      className="inset-y-2 left-2 w-[min(440px,calc(100%-1rem))] rounded-[calc(28px*var(--sol-radius-scale))]"
       label="Menu"
       onClose={close}
       open={open}
@@ -101,7 +101,7 @@ export function MenuDrawer({ items, wordmark }: { items: NavItem[]; wordmark: st
 
           {items.flatMap((i) => i.featured).slice(0, 1).map((f) => (
             <Link
-              className="sol-reveal group relative mt-6 block aspect-[16/10] overflow-hidden rounded-[22px] bg-stone"
+              className="sol-reveal group relative mt-6 block aspect-[16/10] overflow-hidden rounded-[calc(22px*var(--sol-radius-scale))] bg-stone"
               href={f.href}
               key={f.title}
               onClick={close}

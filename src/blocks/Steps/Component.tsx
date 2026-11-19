@@ -12,7 +12,7 @@ export function StepsBlock(props: Props & { id?: string }) {
 
   return (
     <section
-      className={cn('px-[var(--sol-gutter)] py-16 md:py-24', backgroundClass(background))}
+      className={cn('px-[var(--sol-gutter)] py-[var(--sol-section-y-sm)]', backgroundClass(background))}
       data-surface={dark ? 'dark' : undefined}
       id={anchor || props.id}
     >

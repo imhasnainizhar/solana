@@ -37,14 +37,14 @@ export function NewsletterBlock(props: Props & { id?: string }) {
 
   return (
     <section
-      className={cn('px-[var(--sol-gutter)] py-16 md:py-24', backgroundClass(background))}
+      className={cn('px-[var(--sol-gutter)] py-[var(--sol-section-y-sm)]', backgroundClass(background))}
       data-surface={dark ? 'dark' : undefined}
       id={anchor || props.id}
     >
       <div
         className={cn(
           'mx-auto max-w-6xl',
-          card && 'flex max-w-2xl flex-col items-center rounded-[28px] px-6 py-14 text-center md:px-14',
+          card && 'flex max-w-2xl flex-col items-center rounded-[calc(28px*var(--sol-radius-scale))] px-6 py-14 text-center md:px-14',
           card && (dark ? 'bg-white/5' : 'bg-paper shadow-[var(--sol-shadow-float)]'),
         )}
       >

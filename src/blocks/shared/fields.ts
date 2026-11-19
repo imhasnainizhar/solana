@@ -5,16 +5,22 @@ export const backgroundField = (defaultValue: SectionBackground = 'cream'): Fiel
   name: 'background',
   type: 'select',
   defaultValue,
-  admin: { description: 'Section background (from the theme palette).' },
+  label: 'Color scheme',
+  admin: {
+    description:
+      'Section colors come from the active theme (Settings → Theme): light = page background / alternate / surface, dark = inverse, accent = brand color.',
+  },
   options: [
-    { label: 'Cream', value: 'cream' },
-    { label: 'Sand', value: 'sand' },
-    { label: 'Stone', value: 'stone' },
-    { label: 'Dark', value: 'dark' },
+    { label: 'Light — background', value: 'cream' },
+    { label: 'Light — alternate', value: 'sand' },
+    { label: 'Light — surface', value: 'stone' },
+    { label: 'Dark (inverse)', value: 'dark' },
+    { label: 'Accent', value: 'accent' },
   ],
 })
 
-export type SectionBackground = 'cream' | 'sand' | 'stone' | 'dark'
+/** Stored values keep their original names (cream/sand/stone) for backwards compatibility. */
+export type SectionBackground = 'cream' | 'sand' | 'stone' | 'dark' | 'accent'
 
 /** Optional anchor id so menu links like `/#science` can scroll to a section. */
 export const anchorField: Field = {

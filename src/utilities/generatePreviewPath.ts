@@ -29,3 +29,10 @@ export const generatePreviewPath = ({ collection, slug }: Props) => {
 
   return url
 }
+
+/** Live-preview URL for globals (header, footer, theme): previews a storefront path in draft mode. */
+export const generateGlobalPreviewPath = (path = '/') =>
+  `/next/preview?${new URLSearchParams({
+    path,
+    previewSecret: process.env.PREVIEW_SECRET || '',
+  } satisfies PreviewSearchParams).toString()}`

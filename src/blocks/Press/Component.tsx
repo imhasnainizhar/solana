@@ -29,7 +29,7 @@ export function PressBlock(props: Props & { id?: string }) {
   return (
     <section
       aria-labelledby={headingId}
-      className={cn('px-[var(--sol-gutter)] py-16 md:py-24', backgroundClass(background))}
+      className={cn('px-[var(--sol-gutter)] py-[var(--sol-section-y-sm)]', backgroundClass(background))}
       id={anchor || props.id}
     >
       <Reveal className="mx-auto max-w-6xl">
@@ -86,7 +86,7 @@ export function PressBlock(props: Props & { id?: string }) {
                 <li className="snap-start" key={item.id || i}>
                   <Wrap
                     className={cn(
-                      'group relative flex aspect-[4/5] w-full items-end overflow-hidden rounded-[18px] bg-hero text-on-hero',
+                      'group relative flex aspect-[4/5] w-full items-end overflow-hidden rounded-[calc(18px*var(--sol-radius-scale))] bg-hero text-on-hero',
                       single ? 'md:aspect-[21/9] md:min-h-[360px]' : 'md:aspect-[4/3]',
                     )}
                     url={item.url}

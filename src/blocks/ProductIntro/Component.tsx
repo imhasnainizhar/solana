@@ -33,7 +33,7 @@ export function ProductIntroBlock(props: Props & { id?: string }) {
 
       <div className="relative z-10 mt-8 flex w-full max-w-6xl flex-col items-center justify-center gap-8 lg:flex-row lg:gap-0">
         <Reveal
-          className="relative h-[350px] w-full shrink-0 overflow-hidden rounded-[24px] bg-stone p-5 shadow-[var(--sol-shadow-card)] sm:h-[450px] md:h-[550px] lg:h-[650px] lg:w-[65%]"
+          className="relative h-[350px] w-full shrink-0 overflow-hidden rounded-[calc(24px*var(--sol-radius-scale))] bg-stone p-5 shadow-[var(--sol-shadow-card)] sm:h-[450px] md:h-[550px] lg:h-[650px] lg:w-[65%]"
           delay={250}
         >
           {img && (
@@ -52,7 +52,7 @@ export function ProductIntroBlock(props: Props & { id?: string }) {
                 const cimg = mediaSrc(c.image, c.label)
                 return (
                   <div
-                    className="flex w-[124px] flex-col overflow-hidden rounded-[16px] bg-[#5a6770]/90 text-white shadow-xl backdrop-blur-md sm:w-[150px] md:w-[196px]"
+                    className="flex w-[124px] flex-col overflow-hidden rounded-[calc(16px*var(--sol-radius-scale))] bg-[#5a6770]/90 text-white shadow-xl backdrop-blur-md sm:w-[150px] md:w-[196px]"
                     key={c.id || i}
                   >
                     {cimg && (
@@ -81,7 +81,7 @@ export function ProductIntroBlock(props: Props & { id?: string }) {
         </Reveal>
 
         <Reveal className="relative z-20 mx-4 -mt-16 w-auto sm:-mt-24 lg:-ml-20 lg:mt-0 lg:w-[45%]" delay={450}>
-          <div className="rounded-[24px] bg-cream/70 p-8 text-ink shadow-[var(--sol-shadow-card)] backdrop-blur-3xl md:p-12">
+          <div className="rounded-[calc(24px*var(--sol-radius-scale))] bg-cream/70 p-8 text-ink shadow-[var(--sol-shadow-card)] backdrop-blur-3xl md:p-12">
             <h2 className="sol-display mb-6 text-4xl tracking-[-0.03em] sm:text-5xl">{name}</h2>
             <p className="text-base leading-[1.5] sm:text-lg">{promise}</p>
             {secondary && <p className="mt-6 text-base leading-[1.5] text-ink-soft sm:text-lg">{secondary}</p>}

@@ -47,7 +47,7 @@ export function CartDrawer() {
   return (
     <Sheet
       anchor="right"
-      className="inset-y-2 right-2 w-[min(460px,calc(100%-1rem))] rounded-[28px]"
+      className="inset-y-2 right-2 w-[min(460px,calc(100%-1rem))] rounded-[calc(28px*var(--sol-radius-scale))]"
       label="Shopping cart"
       onClose={ui.close}
       open={ui.panel === 'cart'}
@@ -98,7 +98,7 @@ export function CartDrawer() {
                   style={{ ['--d' as string]: `${0.2 + idx * 0.05}s` }}
                 >
                   <Link
-                    className="relative aspect-[4/5] w-[84px] shrink-0 overflow-hidden rounded-[16px] bg-stone"
+                    className="relative aspect-[4/5] w-[84px] shrink-0 overflow-hidden rounded-[calc(16px*var(--sol-radius-scale))] bg-stone"
                     href={`/products/${product.slug}`}
                     onClick={ui.close}
                   >
