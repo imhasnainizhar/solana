@@ -448,6 +448,24 @@ export interface Page {
   id: number;
   title: string;
   publishedOn?: string | null;
+  layout: (
+    | SabiHeroBlock
+    | ProductIntroBlock
+    | StepsBlock
+    | FeaturedProductBlock
+    | SlideshowBlock
+    | CollectionBlock
+    | PressBlock
+    | NewsletterBlock
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | CarouselBlock
+    | ThreeItemGridBlock
+    | BannerBlock
+    | FormBlock
+  )[];
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
     richText?: {
@@ -491,24 +509,6 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
   };
-  layout: (
-    | SabiHeroBlock
-    | ProductIntroBlock
-    | StepsBlock
-    | FeaturedProductBlock
-    | SlideshowBlock
-    | CollectionBlock
-    | PressBlock
-    | NewsletterBlock
-    | CallToActionBlock
-    | ContentBlock
-    | MediaBlock
-    | ArchiveBlock
-    | CarouselBlock
-    | ThreeItemGridBlock
-    | BannerBlock
-    | FormBlock
-  )[];
   meta?: {
     title?: string | null;
     /**
@@ -636,9 +636,9 @@ export interface ProductIntroBlock {
     appearance?: ('default' | 'outline') | null;
   };
   /**
-   * Section background (from the theme palette).
+   * Section colors come from the active theme (Settings → Theme): light = page background / alternate / surface, dark = inverse, accent = brand color.
    */
-  background?: ('cream' | 'sand' | 'stone' | 'dark') | null;
+  background?: ('cream' | 'sand' | 'stone' | 'dark' | 'accent') | null;
   /**
    * Optional anchor id (letters, numbers, dashes) — link to it with "/#anchor".
    */
@@ -667,9 +667,9 @@ export interface StepsBlock {
   }[];
   numberStyle?: ('padded' | 'plain') | null;
   /**
-   * Section background (from the theme palette).
+   * Section colors come from the active theme (Settings → Theme): light = page background / alternate / surface, dark = inverse, accent = brand color.
    */
-  background?: ('cream' | 'sand' | 'stone' | 'dark') | null;
+  background?: ('cream' | 'sand' | 'stone' | 'dark' | 'accent') | null;
   /**
    * Optional anchor id (letters, numbers, dashes) — link to it with "/#anchor".
    */
@@ -705,9 +705,9 @@ export interface FeaturedProductBlock {
   imagePosition?: ('left' | 'right') | null;
   buttonLabel?: string | null;
   /**
-   * Section background (from the theme palette).
+   * Section colors come from the active theme (Settings → Theme): light = page background / alternate / surface, dark = inverse, accent = brand color.
    */
-  background?: ('cream' | 'sand' | 'stone' | 'dark') | null;
+  background?: ('cream' | 'sand' | 'stone' | 'dark' | 'accent') | null;
   /**
    * Optional anchor id (letters, numbers, dashes) — link to it with "/#anchor".
    */
@@ -831,9 +831,9 @@ export interface CollectionBlock {
     label: string;
   };
   /**
-   * Section background (from the theme palette).
+   * Section colors come from the active theme (Settings → Theme): light = page background / alternate / surface, dark = inverse, accent = brand color.
    */
-  background?: ('cream' | 'sand' | 'stone' | 'dark') | null;
+  background?: ('cream' | 'sand' | 'stone' | 'dark' | 'accent') | null;
   /**
    * Optional anchor id (letters, numbers, dashes) — link to it with "/#anchor".
    */
@@ -880,9 +880,9 @@ export interface PressBlock {
     id?: string | null;
   }[];
   /**
-   * Section background (from the theme palette).
+   * Section colors come from the active theme (Settings → Theme): light = page background / alternate / surface, dark = inverse, accent = brand color.
    */
-  background?: ('cream' | 'sand' | 'stone' | 'dark') | null;
+  background?: ('cream' | 'sand' | 'stone' | 'dark' | 'accent') | null;
   /**
    * Optional anchor id (letters, numbers, dashes) — link to it with "/#anchor".
    */
@@ -907,9 +907,9 @@ export interface NewsletterBlock {
   successMessage?: string | null;
   layout?: ('minimal' | 'card') | null;
   /**
-   * Section background (from the theme palette).
+   * Section colors come from the active theme (Settings → Theme): light = page background / alternate / surface, dark = inverse, accent = brand color.
    */
-  background?: ('cream' | 'sand' | 'stone' | 'dark') | null;
+  background?: ('cream' | 'sand' | 'stone' | 'dark' | 'accent') | null;
   /**
    * Optional anchor id (letters, numbers, dashes) — link to it with "/#anchor".
    */
@@ -1608,6 +1608,26 @@ export interface UsersSelect<T extends boolean = true> {
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
   publishedOn?: T;
+  layout?:
+    | T
+    | {
+        sabiHero?: T | SabiHeroBlockSelect<T>;
+        productIntro?: T | ProductIntroBlockSelect<T>;
+        steps?: T | StepsBlockSelect<T>;
+        featuredProduct?: T | FeaturedProductBlockSelect<T>;
+        slideshow?: T | SlideshowBlockSelect<T>;
+        collection?: T | CollectionBlockSelect<T>;
+        press?: T | PressBlockSelect<T>;
+        newsletter?: T | NewsletterBlockSelect<T>;
+        cta?: T | CallToActionBlockSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
+        archive?: T | ArchiveBlockSelect<T>;
+        carousel?: T | CarouselBlockSelect<T>;
+        threeItemGrid?: T | ThreeItemGridBlockSelect<T>;
+        banner?: T | BannerBlockSelect<T>;
+        formBlock?: T | FormBlockSelect<T>;
+      };
   hero?:
     | T
     | {
@@ -1629,26 +1649,6 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
             };
         media?: T;
-      };
-  layout?:
-    | T
-    | {
-        sabiHero?: T | SabiHeroBlockSelect<T>;
-        productIntro?: T | ProductIntroBlockSelect<T>;
-        steps?: T | StepsBlockSelect<T>;
-        featuredProduct?: T | FeaturedProductBlockSelect<T>;
-        slideshow?: T | SlideshowBlockSelect<T>;
-        collection?: T | CollectionBlockSelect<T>;
-        press?: T | PressBlockSelect<T>;
-        newsletter?: T | NewsletterBlockSelect<T>;
-        cta?: T | CallToActionBlockSelect<T>;
-        content?: T | ContentBlockSelect<T>;
-        mediaBlock?: T | MediaBlockSelect<T>;
-        archive?: T | ArchiveBlockSelect<T>;
-        carousel?: T | CarouselBlockSelect<T>;
-        threeItemGrid?: T | ThreeItemGridBlockSelect<T>;
-        banner?: T | BannerBlockSelect<T>;
-        formBlock?: T | FormBlockSelect<T>;
       };
   meta?:
     | T
@@ -2586,13 +2586,56 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
+ * Colors, typography and style of the whole storefront. Changes preview live →
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "theme".
  */
 export interface Theme {
   id: number;
-  preset: 'sabi-cream' | 'midnight' | 'stone' | 'sage';
+  preset: 'sabi-cream' | 'midnight' | 'stone' | 'sage' | 'noir';
+  /**
+   * Optional. Override individual palette colors of the preset; leave empty to use the preset.
+   */
+  colors?: {
+    /**
+     * Page background.
+     */
+    background?: string | null;
+    /**
+     * Cards, chips, image placeholders.
+     */
+    surface?: string | null;
+    /**
+     * Primary text and solid buttons.
+     */
+    ink?: string | null;
+    /**
+     * Secondary text.
+     */
+    muted?: string | null;
+    /**
+     * Accent sections, numbers, focus rings.
+     */
+    accent?: string | null;
+    /**
+     * Hairlines and inputs.
+     */
+    border?: string | null;
+  };
+  fontPairing?: ('modern' | 'editorial' | 'classic' | 'grotesk' | 'humanist' | 'technical') | null;
   radius?: ('none' | 'sm' | 'md' | 'lg' | 'full') | null;
+  density?: ('compact' | 'comfortable' | 'spacious') | null;
+  buttonShape?: ('pill' | 'rounded' | 'square') | null;
+  buttonStyle?: ('solid' | 'outline') | null;
+  /**
+   * How much hero and slideshow images are dimmed behind text.
+   */
+  heroOverlay?: ('none' | 'light' | 'default' | 'strong') | null;
+  /**
+   * Visitors who prefer reduced motion always get reduced motion.
+   */
+  motion?: ('full' | 'reduced' | 'off') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2696,7 +2739,23 @@ export interface FooterSelect<T extends boolean = true> {
  */
 export interface ThemeSelect<T extends boolean = true> {
   preset?: T;
+  colors?:
+    | T
+    | {
+        background?: T;
+        surface?: T;
+        ink?: T;
+        muted?: T;
+        accent?: T;
+        border?: T;
+      };
+  fontPairing?: T;
   radius?: T;
+  density?: T;
+  buttonShape?: T;
+  buttonStyle?: T;
+  heroOverlay?: T;
+  motion?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
