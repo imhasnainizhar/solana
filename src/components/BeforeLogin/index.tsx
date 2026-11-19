@@ -1,14 +1,24 @@
+import type { ServerProps } from 'payload'
+
 import React from 'react'
 
-export const BeforeLogin: React.FC = () => {
+import { googleEnabled, safeRedirect } from '@/auth/config'
+
+import { AdminSignIn } from './AdminSignIn'
+
+/**
+ * Admin login view content. The users collection disables Payload's local
+ * strategy, so Payload renders no email/password form — this passwordless UI
+ * is the only way in. ADMIN_EMAILS users get the admin role on first sign-in.
+ */
+export const BeforeLogin: React.FC<ServerProps> = ({ searchParams }) => {
+  const error = typeof searchParams?.error === 'string' ? searchParams.error : null
+  const redirect = safeRedirect(searchParams?.redirect)
   return (
-    <div>
-      <p>
-        <b>Welcome to your dashboard!</b>
-        {' This is where site admins will log in to manage your store. Customers will need to '}
-        <a href={`${process.env.PAYLOAD_PUBLIC_SERVER_URL}/login`}>log in to the site instead</a>
-        {' to access their user account, order history, and more.'}
-      </p>
-    </div>
+    <AdminSignIn
+      error={error}
+      googleEnabled={googleEnabled()}
+      redirect={redirect?.startsWith('/admin') ? redirect : '/admin'}
+    />
   )
 }

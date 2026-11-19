@@ -16,3 +16,51 @@
   border-radius: var(--style-radius-m);
   transition: outline-color 0.6s;
 }
+
+/* Passwordless admin sign-in (components/BeforeLogin) */
+.sol-admin-signin {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--base) * 0.75);
+  width: 100%;
+
+  &__title {
+    margin: 0;
+  }
+  &__lead {
+    margin: 0 0 calc(var(--base) * 0.5);
+    color: var(--theme-elevation-600);
+  }
+  &__error {
+    margin: 0;
+    color: var(--theme-error-500);
+  }
+  &__google,
+  &__submit {
+    width: 100%;
+    margin: calc(var(--base) * 0.5) 0 0;
+  }
+  &__google {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+  &__or {
+    display: flex;
+    align-items: center;
+    gap: var(--base);
+    color: var(--theme-elevation-500);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--theme-elevation-150);
+    }
+  }
+}

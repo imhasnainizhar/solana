@@ -135,11 +135,10 @@ export const CheckoutPage: React.FC = () => {
           <div className=" bg-accent dark:bg-black rounded-lg p-4 w-full flex items-center">
             <div className="prose dark:prose-invert">
               <Button asChild className="no-underline text-inherit" variant="outline">
-                <Link href="/login">Log in</Link>
+                <Link href="/login?redirect=/checkout">Sign in</Link>
               </Button>
               <p className="mt-0">
-                <span className="mx-2">or</span>
-                <Link href="/create-account">create an account</Link>
+                <span className="mx-2">with Google or an email link — or check out as a guest.</span>
               </p>
             </div>
           </div>
