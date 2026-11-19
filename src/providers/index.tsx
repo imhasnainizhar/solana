@@ -6,6 +6,7 @@ import React from 'react'
 import { HeaderThemeProvider } from './HeaderTheme'
 import { ThemeProvider } from './Theme'
 import { SonnerProvider } from '@/providers/Sonner'
+import { UIProvider } from '@/components/site/ui-context'
 
 export const Providers: React.FC<{
   children: React.ReactNode
@@ -26,10 +27,13 @@ export const Providers: React.FC<{
                     title: true,
                     gallery: true,
                     inventory: true,
+                    priceInUSD: true,
                   },
                   variants: {
                     title: true,
                     inventory: true,
+                    priceInUSD: true,
+                    options: true,
                   },
                 },
               },
@@ -40,7 +44,7 @@ export const Providers: React.FC<{
               }),
             ]}
           >
-            {children}
+            <UIProvider>{children}</UIProvider>
           </EcommerceProvider>
         </HeaderThemeProvider>
       </AuthProvider>

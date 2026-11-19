@@ -1,63 +1,70 @@
+import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
 
 import { AdminBar } from '@/components/AdminBar'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
-import { ensureStartsWith } from '@/utilities/ensureStartsWith'
+import { brand } from '@/lib/brand'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
-import { GeistSans } from 'geist/font/sans'
+import { getServerSideURL } from '@/utilities/getURL'
+import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { GeistMono } from 'geist/font/mono'
+import { GeistSans } from 'geist/font/sans'
+import { Inter_Tight } from 'next/font/google'
 import React from 'react'
 import './globals.css'
 
-/* const { SITE_NAME, TWITTER_CREATOR, TWITTER_SITE } = process.env
-const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-  : 'http://localhost:3000'
-const twitterCreator = TWITTER_CREATOR ? ensureStartsWith(TWITTER_CREATOR, '@') : undefined
-const twitterSite = TWITTER_SITE ? ensureStartsWith(TWITTER_SITE, 'https://') : undefined
- */
-/* export const metadata = {
-  metadataBase: new URL(baseUrl),
-  robots: {
-    follow: true,
-    index: true,
-  },
+/** Display face (headlines, wordmark) — a tight grotesk approximating sabi's Pangea. */
+const interTight = Inter_Tight({
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
+  variable: '--font-inter-tight',
+  display: 'swap',
+})
+
+export const metadata: Metadata = {
+  metadataBase: new URL(getServerSideURL()),
   title: {
-    default: SITE_NAME,
-    template: `%s | ${SITE_NAME}`,
+    default: brand.name,
+    template: `%s — ${brand.name}`,
   },
-  ...(twitterCreator &&
-    twitterSite && {
-      twitter: {
-        card: 'summary_large_image',
-        creator: twitterCreator,
-        site: twitterSite,
-      },
-    }),
-} */
+  description: brand.description,
+  openGraph: mergeOpenGraph(),
+  robots: { follow: true, index: true },
+}
+
+export const viewport: Viewport = {
+  themeColor: '#faf7f1',
+}
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
-      className={[GeistSans.variable, GeistMono.variable].filter(Boolean).join(' ')}
+      className={[GeistSans.variable, GeistMono.variable, interTight.variable].join(' ')}
       lang="en"
       suppressHydrationWarning
     >
       <head>
         <InitTheme />
-        <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
       <body>
         <Providers>
+          <a
+            className="sr-only z-[100] rounded-full bg-ink px-4 py-2 text-cream focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+            href="#main"
+          >
+            Skip to content
+          </a>
           <AdminBar />
           <LivePreviewListener />
 
           <Header />
-          <main>{children}</main>
+          <main className="flex-1" id="main">
+            {children}
+          </main>
           <Footer />
         </Providers>
       </body>

@@ -415,10 +415,15 @@ export interface CallToActionBlock {
         link: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
+              } | null);
           url?: string | null;
           label: string;
           /**
@@ -463,10 +468,15 @@ export interface Page {
           link: {
             type?: ('reference' | 'custom') | null;
             newTab?: boolean | null;
-            reference?: {
-              relationTo: 'pages';
-              value: number | Page;
-            } | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null)
+              | ({
+                  relationTo: 'products';
+                  value: number | Product;
+                } | null);
             url?: string | null;
             label: string;
             /**
@@ -533,10 +543,15 @@ export interface ContentBlock {
         link?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
+              } | null);
           url?: string | null;
           label: string;
           /**
@@ -1789,16 +1804,81 @@ export interface Header {
   id: number;
   navItems?:
     | {
+        kind?: ('link' | 'mega') | null;
         link: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
+              } | null);
           url?: string | null;
           label: string;
         };
+        /**
+         * Columns of links shown in the mega menu and as a submenu in the mobile drawer.
+         */
+        groups?:
+          | {
+              title: string;
+              links?:
+                | {
+                    link: {
+                      type?: ('reference' | 'custom') | null;
+                      newTab?: boolean | null;
+                      reference?:
+                        | ({
+                            relationTo: 'pages';
+                            value: number | Page;
+                          } | null)
+                        | ({
+                            relationTo: 'products';
+                            value: number | Product;
+                          } | null);
+                      url?: string | null;
+                      label: string;
+                    };
+                    /**
+                     * Optional one-liner under the link.
+                     */
+                    description?: string | null;
+                    id?: string | null;
+                  }[]
+                | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Image cards shown at the right of the mega menu (and in the mobile drawer).
+         */
+        featured?:
+          | {
+              image: number | Media;
+              eyebrow?: string | null;
+              title: string;
+              caption?: string | null;
+              link?: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: number | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'products';
+                      value: number | Product;
+                    } | null);
+                url?: string | null;
+              };
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
@@ -1811,21 +1891,38 @@ export interface Header {
  */
 export interface Footer {
   id: number;
-  navItems?:
+  tagline?: string | null;
+  columns?:
     | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
-          url?: string | null;
-          label: string;
-        };
+        title: string;
+        links?:
+          | {
+              link: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: number | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'products';
+                      value: number | Product;
+                    } | null);
+                url?: string | null;
+                label: string;
+              };
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
+  /**
+   * Shown after the © year, e.g. "Solana Studio Inc."
+   */
+  legal?: string | null;
+  showWordmark?: boolean | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1848,6 +1945,7 @@ export interface HeaderSelect<T extends boolean = true> {
   navItems?:
     | T
     | {
+        kind?: T;
         link?:
           | T
           | {
@@ -1856,6 +1954,44 @@ export interface HeaderSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+            };
+        groups?:
+          | T
+          | {
+              title?: T;
+              links?:
+                | T
+                | {
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          newTab?: T;
+                          reference?: T;
+                          url?: T;
+                          label?: T;
+                        };
+                    description?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+        featured?:
+          | T
+          | {
+              image?: T;
+              eyebrow?: T;
+              title?: T;
+              caption?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                  };
+              id?: T;
             };
         id?: T;
       };
@@ -1868,20 +2004,29 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
-  navItems?:
+  tagline?: T;
+  columns?:
     | T
     | {
-        link?:
+        title?: T;
+        links?:
           | T
           | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                  };
+              id?: T;
             };
         id?: T;
       };
+  legal?: T;
+  showWordmark?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

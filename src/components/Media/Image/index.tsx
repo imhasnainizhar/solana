@@ -9,6 +9,7 @@ import React from 'react'
 import type { Props as MediaProps } from '../types'
 
 import { cssVariables } from '@/cssVariables'
+import { mediaSrc } from '@/utilities/mediaSrc'
 
 const { breakpoints } = cssVariables
 
@@ -49,7 +50,8 @@ export const Image: React.FC<MediaProps> = (props) => {
 
     const filename = fullFilename
 
-    src = `${process.env.NEXT_PUBLIC_SERVER_URL}${url}`
+    // relative URLs match `images.localPatterns` and work on any host/port
+    src = mediaSrc(resource)?.src || url || ''
   }
 
   // NOTE: this is used by the browser to determine which image to download at different screen sizes
@@ -73,7 +75,6 @@ export const Image: React.FC<MediaProps> = (props) => {
         }
       }}
       priority={priority}
-      quality={90}
       sizes={sizes}
       src={src}
       width={!fill ? width || widthFromProps : undefined}
