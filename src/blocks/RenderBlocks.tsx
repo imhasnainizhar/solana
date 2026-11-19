@@ -38,6 +38,17 @@ const blockComponents = {
   threeItemGrid: ThreeItemGridBlock,
 }
 
+const blockLabels: Record<string, string> = {
+  collection: 'Collection',
+  featuredProduct: 'Featured product',
+  newsletter: 'Newsletter',
+  press: 'Press',
+  productIntro: 'Product intro',
+  sabiHero: 'Hero',
+  slideshow: 'Slideshow',
+  steps: 'Steps',
+}
+
 /** Storefront blocks own their full-bleed section + spacing; legacy template blocks get vertical rhythm. */
 const SECTION_BLOCKS = new Set<string>([
   'collection',
@@ -70,11 +81,25 @@ export const RenderBlocks: React.FC<{
             const Block = blockComponents[blockType] as React.ComponentType<Record<string, unknown>>
             const id = blockName ? toKebabCase(blockName) : undefined
 
+            // data-sol-block* lets the build-mode bar outline sections and deep-link to them in the admin.
+            const marker = {
+              'data-sol-block': index,
+              'data-sol-block-label': blockName || blockLabels[blockType] || blockType,
+            }
+
             if (SECTION_BLOCKS.has(blockType)) {
-              return <Block key={block.id || index} {...block} id={id} />
+              return (
+                <div key={block.id || index} {...marker}>
+                  <Block {...block} id={id} />
+                </div>
+              )
             }
             return (
-              <div className="py-[calc(var(--sol-section-y)/2)]" key={block.id || index}>
+              <div
+                className="py-[calc(var(--sol-section-y)/2)]"
+                key={block.id || index}
+                {...marker}
+              >
                 <Block {...block} id={id} />
               </div>
             )

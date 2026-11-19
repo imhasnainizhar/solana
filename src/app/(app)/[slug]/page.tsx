@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 import { FULL_BLEED_BLOCKS, RenderBlocks } from '@/blocks/RenderBlocks'
+import { BuildModeDoc } from '@/components/BuildMode/BuildModeDoc'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import configPromise from '@payload-config'
@@ -67,6 +68,7 @@ export default async function Page({ params }: Args) {
 
   return (
     <article className={underNav ? '' : 'pt-[calc(var(--sol-nav-h)+var(--sol-nav-inset)+2rem)]'}>
+      {page.id ? <BuildModeDoc collection="pages" id={page.id} title={page.title} /> : null}
       <RenderHero {...hero} />
       <RenderBlocks blocks={layout} />
     </article>

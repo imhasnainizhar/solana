@@ -3,11 +3,15 @@ import type { GlobalConfig } from 'payload'
 import { adminOnly } from '@/access/adminOnly'
 import { link } from '@/fields/link'
 import { revalidateGlobal } from '@/hooks/revalidateGlobal'
+import { generateGlobalPreviewPath } from '@/utilities/generatePreviewPath'
 
 export const Footer: GlobalConfig = {
   slug: 'footer',
   admin: {
     group: 'Settings',
+    livePreview: {
+      url: () => generateGlobalPreviewPath('/'),
+    },
   },
   access: {
     read: () => true,

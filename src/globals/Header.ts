@@ -3,6 +3,7 @@ import type { GlobalConfig } from 'payload'
 import { adminOnly } from '@/access/adminOnly'
 import { link } from '@/fields/link'
 import { revalidateGlobal } from '@/hooks/revalidateGlobal'
+import { generateGlobalPreviewPath } from '@/utilities/generatePreviewPath'
 
 /**
  * Storefront navigation. Drives the floating navbar, the desktop mega menu and
@@ -18,6 +19,9 @@ export const Header: GlobalConfig = {
   label: 'Header & menu',
   admin: {
     group: 'Settings',
+    livePreview: {
+      url: () => generateGlobalPreviewPath('/'),
+    },
   },
   access: {
     read: () => true,
@@ -59,7 +63,8 @@ export const Header: GlobalConfig = {
           maxRows: 4,
           admin: {
             condition: (_, siblingData) => siblingData?.kind === 'mega',
-            description: 'Columns of links shown in the mega menu and as a submenu in the mobile drawer.',
+            description:
+              'Columns of links shown in the mega menu and as a submenu in the mobile drawer.',
             initCollapsed: true,
           },
           fields: [
@@ -86,7 +91,8 @@ export const Header: GlobalConfig = {
           maxRows: 2,
           admin: {
             condition: (_, siblingData) => siblingData?.kind === 'mega',
-            description: 'Image cards shown at the right of the mega menu (and in the mobile drawer).',
+            description:
+              'Image cards shown at the right of the mega menu (and in the mobile drawer).',
             initCollapsed: true,
           },
           fields: [

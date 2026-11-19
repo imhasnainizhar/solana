@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
 
-import { AdminBar } from '@/components/AdminBar'
+import { BuildModeBar } from '@/components/BuildMode/BuildModeBar'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
@@ -10,19 +10,12 @@ import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { getServerSideURL } from '@/utilities/getURL'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
-import { GeistMono } from 'geist/font/mono'
-import { GeistSans } from 'geist/font/sans'
-import { Inter_Tight } from 'next/font/google'
+import { ThemeLivePreview } from '@/components/ThemeLivePreview'
+import { buildThemeCss, resolveMotion, themeColor } from '@/theme/css'
+import { fontVariableClassName } from '@/theme/fonts'
+import { getCachedGlobal } from '@/utilities/getGlobals'
 import React from 'react'
 import './globals.css'
-
-/** Display face (headlines, wordmark) — a tight grotesk approximating sabi's Pangea. */
-const interTight = Inter_Tight({
-  subsets: ['latin'],
-  weight: ['300', '400', '500'],
-  variable: '--font-inter-tight',
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   metadataBase: new URL(getServerSideURL()),
@@ -35,18 +28,25 @@ export const metadata: Metadata = {
   robots: { follow: true, index: true },
 }
 
-export const viewport: Viewport = {
-  themeColor: '#faf7f1',
+export async function generateViewport(): Promise<Viewport> {
+  const theme = await getCachedGlobal('theme')()
+  return { themeColor: themeColor(theme) }
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
+  // Theme global → CSS variables, rendered server-side so there is no flash.
+  const theme = await getCachedGlobal('theme')()
+
   return (
     <html
-      className={[GeistSans.variable, GeistMono.variable, interTight.variable].join(' ')}
+      className={fontVariableClassName}
+      data-motion={resolveMotion(theme)}
+      data-theme="light"
       lang="en"
       suppressHydrationWarning
     >
       <head>
+        <style dangerouslySetInnerHTML={{ __html: buildThemeCss(theme) }} id="sol-theme" />
         <InitTheme />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
@@ -58,14 +58,15 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           >
             Skip to content
           </a>
-          <AdminBar />
           <LivePreviewListener />
+          <ThemeLivePreview />
 
           <Header />
           <main className="flex-1" id="main">
             {children}
           </main>
           <Footer />
+          <BuildModeBar />
         </Providers>
       </body>
     </html>

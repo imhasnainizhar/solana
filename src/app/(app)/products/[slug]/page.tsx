@@ -1,6 +1,7 @@
 import type { Media, Product } from '@/payload-types'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
+import { BuildModeDoc } from '@/components/BuildMode/BuildModeDoc'
 import { GridTileImage } from '@/components/Grid/tile'
 import { Gallery } from '@/components/product/Gallery'
 import { ProductDescription } from '@/components/product/ProductDescription'
@@ -117,6 +118,7 @@ export default async function ProductPage({ params }: Args) {
         }}
         type="application/ld+json"
       />
+      <BuildModeDoc collection="products" id={product.id} title={product.title} />
       <div className="container pt-8 pb-8">
         <Button asChild variant="ghost" className="mb-4">
           <Link href="/shop">
