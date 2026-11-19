@@ -1,4 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import {
   BoldFeature,
   EXPERIMENTAL_TableFeature,
@@ -12,6 +13,7 @@ import {
 } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
+import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
 import { Categories } from '@/collections/Categories'
@@ -20,6 +22,7 @@ import { Pages } from '@/collections/Pages'
 import { Users } from '@/collections/Users'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
+import { Theme } from '@/globals/Theme'
 import { plugins } from './plugins'
 
 const filename = fileURLToPath(import.meta.url)
@@ -40,8 +43,12 @@ export default buildConfig({
   collections: [Users, Pages, Categories, Media],
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || '',
+      // DATABASE_URI is canonical; POSTGRES_URL / DATABASE_URL are what the
+      // Vercel Neon marketplace integration injects automatically.
+      connectionString:
+        process.env.DATABASE_URI || process.env.POSTGRES_URL || process.env.DATABASE_URL || '',
     },
+    migrationDir: path.resolve(dirname, 'migrations'),
   }),
   editor: lexicalEditor({
     features: () => {
@@ -80,14 +87,19 @@ export default buildConfig({
   }),
   //email: nodemailerAdapter(),
   endpoints: [],
-  globals: [Header, Footer],
-  plugins,
+  globals: [Header, Footer, Theme],
+  plugins: [
+    ...plugins,
+    // Vercel Blob is only enabled when a token is present; otherwise uploads go to /public/media.
+    vercelBlobStorage({
+      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      collections: { media: true },
+      token: process.env.BLOB_READ_WRITE_TOKEN || '',
+    }),
+  ],
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  // Sharp is now an optional dependency -
-  // if you want to resize images, crop, set focal point, etc.
-  // make sure to install it and pass it to the config.
-  // sharp,
+  sharp,
 })
