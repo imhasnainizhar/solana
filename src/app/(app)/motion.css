@@ -1,0 +1,334 @@
+/*
+ * Storefront component primitives + motion system.
+ * Colours / radii / easings all come from tokens.css.
+ * Every animated class is neutralised under prefers-reduced-motion at the bottom.
+ */
+
+@layer components {
+  /* ── Layout ─────────────────────────────────────────────────────────── */
+  .sol-container {
+    width: 100%;
+    max-width: calc(var(--sol-maxw) + 2 * var(--sol-gutter));
+    margin-inline: auto;
+    padding-inline: var(--sol-gutter);
+  }
+  .sol-container-wide {
+    width: 100%;
+    max-width: calc(var(--sol-maxw-wide) + 2 * var(--sol-gutter));
+    margin-inline: auto;
+    padding-inline: var(--sol-gutter);
+  }
+  .sol-section {
+    padding-block: var(--sol-section-y);
+  }
+
+  /* ── Type ───────────────────────────────────────────────────────────── */
+  .sol-display {
+    font-family: var(--sol-font-display);
+    font-weight: 400;
+    letter-spacing: var(--sol-tracking-display);
+    line-height: 0.95;
+  }
+  .sol-h2 {
+    font-family: var(--sol-font-display);
+    font-size: var(--sol-text-h2);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: var(--sol-tracking-tight);
+  }
+  .sol-eyebrow {
+    font-size: var(--sol-text-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── Buttons ────────────────────────────────────────────────────────── */
+  .sol-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0 1.5rem;
+    border-radius: var(--sol-radius-pill);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    transition:
+      background-color 0.25s,
+      color 0.25s,
+      transform 0.25s var(--sol-ease-out),
+      opacity 0.25s;
+    &:active {
+      transform: scale(0.98);
+    }
+    &:disabled,
+    &[aria-disabled='true'] {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+  }
+  .sol-btn-primary {
+    background: var(--sol-ink);
+    color: var(--sol-cream);
+    &:hover {
+      background: color-mix(in srgb, var(--sol-ink) 85%, var(--sol-cream));
+    }
+  }
+  .sol-btn-ghost {
+    background: transparent;
+    color: currentColor;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 25%, transparent);
+    &:hover {
+      background: color-mix(in srgb, currentColor 8%, transparent);
+    }
+  }
+  .sol-btn-light {
+    background: var(--sol-on-hero);
+    color: var(--sol-ink);
+    &:hover {
+      background: #fff;
+    }
+  }
+  .sol-icon-btn {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--sol-radius-pill);
+    transition: background-color 0.25s;
+    &:hover {
+      background: color-mix(in srgb, currentColor 10%, transparent);
+    }
+  }
+}
+
+/* ── Floating navbar ─────────────────────────────────────────────────────── */
+.sol-nav {
+  transition:
+    transform 0.55s var(--sol-ease-out),
+    color 0.35s;
+}
+.sol-nav[data-hidden='true'] {
+  transform: translate3d(0, calc(-100% - var(--sol-nav-inset) - 8px), 0);
+}
+.sol-nav-pill {
+  transition:
+    background-color 0.35s,
+    box-shadow 0.35s,
+    border-color 0.35s,
+    backdrop-filter 0.35s;
+}
+
+/* ── Drawer / sheet (cart, menu, search) ─────────────────────────────────── */
+.sol-overlay {
+  background: var(--sol-overlay);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.6s var(--sol-ease-sheet);
+}
+[data-open='true'] > .sol-overlay {
+  opacity: 1;
+}
+.sol-sheet {
+  transition: transform var(--sol-duration-sheet) var(--sol-ease-sheet);
+}
+.sol-sheet[data-anchor='right'] {
+  transform: translate3d(calc(100% + 2rem), 0, 0);
+}
+.sol-sheet[data-anchor='left'] {
+  transform: translate3d(calc(-100% - 2rem), 0, 0);
+}
+.sol-sheet[data-anchor='top'] {
+  transform: translate3d(0, calc(-100% - 2rem), 0);
+}
+.sol-sheet[data-anchor='bottom'] {
+  transform: translate3d(0, calc(100% + 2rem), 0);
+}
+[data-open='true'] > .sol-sheet {
+  transform: none;
+}
+
+/* staggered reveal inside an open sheet — set --d for the delay */
+.sol-reveal {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity 0.55s var(--sol-ease-out),
+    transform 0.55s var(--sol-ease-out);
+}
+[data-open='true'] .sol-reveal {
+  opacity: 1;
+  transform: none;
+  transition-delay: var(--d, 0s);
+}
+
+/* drill-down submenus slide in from the right; items rise in a stagger */
+.sol-submenu {
+  transform: translate3d(100%, 0, 0);
+  transition: transform 0.5s var(--sol-ease-soft);
+}
+.sol-submenu[data-active='true'] {
+  transform: none;
+}
+.sol-sub-item {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity 0.5s var(--sol-ease-soft),
+    transform 0.5s var(--sol-ease-soft);
+}
+.sol-submenu[data-active='true'] .sol-sub-item {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(0.15s + 0.06s * var(--i, 0));
+}
+
+/* mega-menu panel */
+.sol-mega {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0, -8px, 0) scale(0.985);
+  transform-origin: top center;
+  transition:
+    opacity 0.35s var(--sol-ease-out),
+    transform 0.45s var(--sol-ease-out),
+    visibility 0.45s;
+}
+.sol-mega[data-open='true'] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+.sol-mega-col {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  transition:
+    opacity 0.4s var(--sol-ease-out),
+    transform 0.5s var(--sol-ease-out);
+}
+.sol-mega[data-open='true'] .sol-mega-col {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(0.05s + 0.05s * var(--i, 0));
+}
+
+/* letter "roll" on hover (menu links) */
+.sol-roll {
+  display: inline-grid;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.sol-roll > span {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+}
+.sol-roll-char {
+  display: inline-block;
+  transition:
+    transform 0.42s var(--sol-ease-out),
+    opacity 0.28s ease;
+  transition-delay: calc(var(--ci, 0) * 14ms);
+}
+.sol-roll > span:last-child .sol-roll-char {
+  opacity: 0;
+  transform: translate3d(0, 90%, 0);
+}
+:is(a, button):is(:hover, :focus-visible) .sol-roll > span:first-child .sol-roll-char {
+  opacity: 0;
+  transform: translate3d(0, -90%, 0);
+}
+:is(a, button):is(:hover, :focus-visible) .sol-roll > span:last-child .sol-roll-char {
+  opacity: 1;
+  transform: none;
+}
+
+/* icon morphs (menu ↔ close) */
+.sol-morph {
+  transition:
+    opacity 0.18s,
+    transform 0.42s var(--sol-ease-out);
+}
+
+/* mobile dock entrance + hide while a sheet is open */
+.sol-dock {
+  transform: translate3d(0, calc(100% + 24px), 0);
+  transition: transform 0.9s var(--sol-ease-out);
+}
+.sol-dock[data-ready='true'] {
+  transform: none;
+}
+
+/* close buttons spin on hover */
+.sol-close svg {
+  transition: transform 0.3s;
+}
+@media (hover: hover) and (pointer: fine) {
+  .sol-close:hover svg {
+    transform: rotate(90deg);
+  }
+}
+
+/* scroll reveal for blocks (see components/site/Reveal.tsx) */
+.sol-inview {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity var(--sol-duration-reveal) var(--sol-ease-reveal),
+    transform var(--sol-duration-reveal) var(--sol-ease-reveal);
+  transition-delay: var(--d, 0s);
+}
+.sol-inview[data-shown='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* hero collage idle drift (each column gets its own duration/direction) */
+@keyframes sol-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, var(--drift, -6%), 0);
+  }
+}
+.sol-drift {
+  animation: sol-drift var(--drift-dur, 40s) ease-in-out infinite alternate;
+}
+
+/* hide scrollbars on horizontal rails */
+.sol-rail {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sol-nav,
+  .sol-nav-pill,
+  .sol-overlay,
+  .sol-sheet,
+  .sol-reveal,
+  .sol-submenu,
+  .sol-sub-item,
+  .sol-mega,
+  .sol-mega-col,
+  .sol-roll-char,
+  .sol-morph,
+  .sol-dock,
+  .sol-inview {
+    transition-duration: 1ms !important;
+    transition-delay: 0s !important;
+  }
+  .sol-drift {
+    animation: none !important;
+  }
+  .sol-inview {
+    opacity: 1;
+    transform: none;
+  }
+}

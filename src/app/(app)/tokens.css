@@ -1,0 +1,80 @@
+/*
+ * Solana design tokens — the ONE place storefront colours, type, radius, spacing
+ * and motion are defined. Everything else (Tailwind utilities via `@theme inline`
+ * in globals.css, block components, shadcn primitives) reads these variables.
+ *
+ * Phase 3 (Theme global / build mode) overrides these on <html> per preset,
+ * e.g. `[data-preset='midnight'] { --sol-cream: …; }` or an inline style tag.
+ *
+ * Default preset: "Cream" (sabi-style warm ivory palette with a dark hero).
+ */
+:root {
+  /* ── Palette ─────────────────────────────────────────────────────────── */
+  --sol-cream: #faf7f1; /* page background */
+  --sol-sand: #f3ede8; /* alternate section background */
+  --sol-stone: #ede8e0; /* cards, chips, image placeholders */
+  --sol-line: #dcd5c8; /* hairlines, borders, inputs */
+  --sol-ink: #1d1c18; /* primary text (near-black) */
+  --sol-ink-soft: #6e6e64; /* secondary text */
+  --sol-ink-muted: #9a978c; /* tertiary text, placeholders */
+  --sol-paper: #fffdf9; /* raised surfaces (drawers, popovers) */
+  --sol-hero: #0b0b0a; /* dark hero / dark sections */
+  --sol-on-hero: #f7f4ee; /* text on dark */
+  --sol-accent: #283746; /* denim — step numbers, focus */
+  --sol-accent-warm: #e1643c; /* badges, sale, highlights */
+  --sol-success: #3f6b4a;
+  --sol-danger: #b4432c;
+
+  /* ── Typography ──────────────────────────────────────────────────────── */
+  --sol-font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --sol-font-display: var(--font-inter-tight), var(--font-geist-sans), ui-sans-serif, system-ui,
+    sans-serif;
+  --sol-font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --sol-tracking-display: -0.035em;
+  --sol-tracking-tight: -0.015em;
+  --sol-text-hero: clamp(3.25rem, 15.6vw, 18.75rem);
+  --sol-text-display: clamp(2.5rem, 6vw, 5.5rem);
+  --sol-text-h2: clamp(1.65rem, 3.5vw, 2.25rem);
+  --sol-text-h3: clamp(1.35rem, 2.4vw, 1.75rem);
+  --sol-text-body: 1.0625rem;
+  --sol-text-small: 0.8125rem;
+  --sol-text-eyebrow: 0.75rem;
+
+  /* ── Radius ──────────────────────────────────────────────────────────── */
+  --sol-radius-xs: 8px;
+  --sol-radius-sm: 12px;
+  --sol-radius-md: 18px;
+  --sol-radius-lg: 24px;
+  --sol-radius-xl: 32px;
+  --sol-radius-pill: 999px;
+  --sol-radius-tile: clamp(4px, 1vw, 10px); /* hero collage tiles */
+  --sol-radius-section: 40px; /* rounded bottom of the hero */
+
+  /* ── Spacing / layout ───────────────────────────────────────────────── */
+  --sol-gutter: clamp(1.25rem, 4.5vw, 5rem);
+  --sol-section-y: clamp(4.5rem, 9vw, 8.5rem);
+  --sol-maxw: 72rem;
+  --sol-maxw-wide: 90rem;
+  --sol-nav-h: 3.5rem;
+  --sol-nav-inset: 0.75rem;
+  --sol-dock-h: 4.25rem;
+
+  /* ── Elevation ──────────────────────────────────────────────────────── */
+  --sol-shadow-float: 0 12px 40px -14px rgb(29 28 24 / 0.28), 0 2px 8px -2px rgb(29 28 24 / 0.08);
+  --sol-shadow-card: 0 30px 60px -30px rgb(29 28 24 / 0.35);
+  --sol-overlay: rgb(20 19 16 / 0.38);
+
+  /* ── Motion ─────────────────────────────────────────────────────────── */
+  --sol-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --sol-ease-sheet: cubic-bezier(0.7, 0, 0.2, 1);
+  --sol-ease-soft: cubic-bezier(0.3, 1, 0.3, 1);
+  --sol-ease-reveal: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --sol-duration-sheet: 0.6s;
+  --sol-duration-reveal: 0.9s;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --sol-nav-h: 3.75rem;
+  }
+}

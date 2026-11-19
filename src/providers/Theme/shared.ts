@@ -4,14 +4,8 @@ export const themeLocalStorageKey = 'payload-theme'
 
 export const defaultTheme = 'light'
 
-export const getImplicitPreference = (): Theme | null => {
-  const mediaQuery = '(prefers-color-scheme: dark)'
-  const mql = window.matchMedia(mediaQuery)
-  const hasImplicitPreference = typeof mql.matches === 'boolean'
-
-  if (hasImplicitPreference) {
-    return mql.matches ? 'dark' : 'light'
-  }
-
-  return null
-}
+/**
+ * The storefront palette is token-driven (tokens.css) and does not follow the OS
+ * dark-mode preference; Phase 3 theme presets replace this mechanism.
+ */
+export const getImplicitPreference = (): Theme | null => defaultTheme

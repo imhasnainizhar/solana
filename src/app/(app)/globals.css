@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import './tokens.css';
+@import './motion.css';
 
 @config '../../../tailwind.config.mjs';
 
@@ -43,8 +45,9 @@
   --breakpoint-lg: 64rem;
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 86rem;
-  --font-mono: var(--font-geist-mono);
-  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--sol-font-mono);
+  --font-sans: var(--sol-font-sans);
+  --font-display: var(--sol-font-display);
 }
 
 @layer utilities {
@@ -87,80 +90,43 @@
 }
 
 :root {
-  --background: oklch(100% 0 0deg);
-  --foreground: oklch(14.5% 0 0deg);
-  --card: oklch(96.5% 0.005 265deg);
-  --card-foreground: oklch(14.5% 0 0deg);
-  --popover: oklch(100% 0 0deg);
-  --popover-foreground: oklch(14.5% 0 0deg);
-  --primary: oklch(20.5% 0 0deg);
-  --primary-foreground: oklch(98.5% 0 0deg);
-  --secondary: oklch(97% 0 0deg);
-  --secondary-foreground: oklch(20.5% 0 0deg);
-  --muted: oklch(97% 0 0deg);
-  --muted-foreground: oklch(55.6% 0 0deg);
-  --accent: oklch(97% 0 0deg);
-  --accent-foreground: oklch(20.5% 0 0deg);
-  --destructive: oklch(57.7% 0.245 27.325deg);
-  --destructive-foreground: oklch(57.7% 0.245 27.325deg);
-  --border: oklch(92.2% 0 0deg);
-  --input: oklch(92.2% 0 0deg);
-  --ring: oklch(70.8% 0 0deg);
+  /* shadcn/ui semantic tokens, mapped onto the Solana design tokens (tokens.css) */
+  --background: var(--sol-cream);
+  --foreground: var(--sol-ink);
+  --card: var(--sol-stone);
+  --card-foreground: var(--sol-ink);
+  --popover: var(--sol-paper);
+  --popover-foreground: var(--sol-ink);
+  --primary: var(--sol-ink);
+  --primary-foreground: var(--sol-cream);
+  --secondary: var(--sol-sand);
+  --secondary-foreground: var(--sol-ink);
+  --muted: var(--sol-sand);
+  --muted-foreground: var(--sol-ink-soft);
+  --accent: var(--sol-stone);
+  --accent-foreground: var(--sol-ink);
+  --destructive: var(--sol-danger);
+  --destructive-foreground: var(--sol-danger);
+  --border: var(--sol-line);
+  --input: var(--sol-line);
+  --ring: var(--sol-accent);
   --chart-1: oklch(64.6% 0.222 41.116deg);
   --chart-2: oklch(60% 0.118 184.704deg);
   --chart-3: oklch(39.8% 0.07 227.392deg);
   --chart-4: oklch(82.8% 0.189 84.429deg);
   --chart-5: oklch(76.9% 0.188 70.08deg);
-  --radius: 0.625rem;
-  --sidebar: oklch(98.5% 0 0deg);
-  --sidebar-foreground: oklch(14.5% 0 0deg);
-  --sidebar-primary: oklch(20.5% 0 0deg);
-  --sidebar-primary-foreground: oklch(98.5% 0 0deg);
-  --sidebar-accent: oklch(97% 0 0deg);
-  --sidebar-accent-foreground: oklch(20.5% 0 0deg);
-  --sidebar-border: oklch(92.2% 0 0deg);
-  --sidebar-ring: oklch(70.8% 0 0deg);
-  --success: oklch(78% 0.08 200deg);
+  --radius: var(--sol-radius-sm);
+  --sidebar: var(--sol-sand);
+  --sidebar-foreground: var(--sol-ink);
+  --sidebar-primary: var(--sol-ink);
+  --sidebar-primary-foreground: var(--sol-cream);
+  --sidebar-accent: var(--sol-stone);
+  --sidebar-accent-foreground: var(--sol-ink);
+  --sidebar-border: var(--sol-line);
+  --sidebar-ring: var(--sol-accent);
+  --success: color-mix(in srgb, var(--sol-success) 35%, var(--sol-cream));
   --warning: oklch(89% 0.1 75deg);
-  --error: oklch(75% 0.15 25deg);
-}
-
-[data-theme='dark'] {
-  --background: oklch(14.5% 0 0deg);
-  --foreground: oklch(98.5% 0 0deg);
-  --card: oklch(17% 0 0deg);
-  --card-foreground: oklch(98.5% 0 0deg);
-  --popover: oklch(14.5% 0 0deg);
-  --popover-foreground: oklch(98.5% 0 0deg);
-  --primary: oklch(98.5% 0 0deg);
-  --primary-foreground: oklch(20.5% 0 0deg);
-  --secondary: oklch(26.9% 0 0deg);
-  --secondary-foreground: oklch(98.5% 0 0deg);
-  --muted: oklch(26.9% 0 0deg);
-  --muted-foreground: oklch(70.8% 0 0deg);
-  --accent: oklch(26.9% 0 0deg);
-  --accent-foreground: oklch(98.5% 0 0deg);
-  --destructive: oklch(39.6% 0.141 25.723deg);
-  --destructive-foreground: oklch(63.7% 0.237 25.331deg);
-  --border: oklch(26.9% 0 0deg);
-  --input: oklch(26.9% 0 0deg);
-  --ring: oklch(43.9% 0 0deg);
-  --chart-1: oklch(48.8% 0.243 264.376deg);
-  --chart-2: oklch(69.6% 0.17 162.48deg);
-  --chart-3: oklch(76.9% 0.188 70.08deg);
-  --chart-4: oklch(62.7% 0.265 303.9deg);
-  --chart-5: oklch(64.5% 0.246 16.439deg);
-  --sidebar: oklch(20.5% 0 0deg);
-  --sidebar-foreground: oklch(98.5% 0 0deg);
-  --sidebar-primary: oklch(48.8% 0.243 264.376deg);
-  --sidebar-primary-foreground: oklch(98.5% 0 0deg);
-  --sidebar-accent: oklch(26.9% 0 0deg);
-  --sidebar-accent-foreground: oklch(98.5% 0 0deg);
-  --sidebar-border: oklch(26.9% 0 0deg);
-  --sidebar-ring: oklch(43.9% 0 0deg);
-  --success: oklch(28% 0.1 200deg);
-  --warning: oklch(35% 0.08 70deg);
-  --error: oklch(45% 0.1 25deg);
+  --error: color-mix(in srgb, var(--sol-danger) 35%, var(--sol-cream));
 }
 
 @theme inline {
@@ -203,14 +169,47 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
+
+  /* Solana palette utilities: bg-cream, text-ink, border-line, bg-hero … */
+  --color-cream: var(--sol-cream);
+  --color-sand: var(--sol-sand);
+  --color-stone: var(--sol-stone);
+  --color-line: var(--sol-line);
+  --color-ink: var(--sol-ink);
+  --color-ink-soft: var(--sol-ink-soft);
+  --color-ink-muted: var(--sol-ink-muted);
+  --color-paper: var(--sol-paper);
+  --color-hero: var(--sol-hero);
+  --color-on-hero: var(--sol-on-hero);
+  --color-brand: var(--sol-accent);
+  --color-brand-warm: var(--sol-accent-warm);
+  --radius-tile: var(--sol-radius-tile);
+  --radius-card: var(--sol-radius-lg);
+  --radius-panel: var(--sol-radius-xl);
+  --ease-out-soft: var(--sol-ease-out);
+  --ease-sheet: var(--sol-ease-sheet);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--sol-nav-h) + 2rem);
+  }
   body {
     @apply bg-background text-foreground min-h-[100vh] flex flex-col;
+    font-family: var(--sol-font-sans);
+    font-size: var(--sol-text-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--sol-ink);
+    color: var(--sol-cream);
   }
 }
 
@@ -225,6 +224,15 @@ html[data-theme='light'] {
 
 a,
 input,
-button {
-  @apply focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-neutral-600 dark:focus-visible:ring-offset-neutral-900;
+button,
+[tabindex] {
+  &:focus-visible {
+    outline: 2px solid var(--sol-accent);
+    outline-offset: 3px;
+  }
+}
+
+/* Inside dark surfaces the focus ring flips to the light ink */
+[data-surface='dark'] :is(a, input, button, [tabindex]):focus-visible {
+  outline-color: var(--sol-on-hero);
 }
