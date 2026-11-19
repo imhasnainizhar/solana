@@ -1,8 +1,8 @@
 {
   "name": "solana",
-  "version": "1.0.0",
-  "description": "Ecommerce template for Payload",
-  "license": "MIT",
+  "version": "0.1.0",
+  "description": "Solana \u2014 premium small-catalog / one-product store template (Next.js + Payload CMS)",
+  "license": "Apache-2.0",
   "type": "module",
   "scripts": {
     "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
@@ -19,10 +19,14 @@
     "stripe-webhooks": "stripe listen --forward-to localhost:3000/api/payments/stripe/webhooks",
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
-    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
+    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
+    "ci": "cross-env NODE_OPTIONS=--no-deprecation payload migrate && pnpm build",
+    "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
+    "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create"
   },
   "dependencies": {
     "@payloadcms/admin-bar": "3.94.0",
+    "@payloadcms/db-postgres": "3.94.0",
     "@payloadcms/email-nodemailer": "3.94.0",
     "@payloadcms/live-preview-react": "3.94.0",
     "@payloadcms/next": "3.94.0",
@@ -30,6 +34,7 @@
     "@payloadcms/plugin-form-builder": "3.94.0",
     "@payloadcms/plugin-seo": "3.94.0",
     "@payloadcms/richtext-lexical": "3.94.0",
+    "@payloadcms/storage-vercel-blob": "3.94.0",
     "@payloadcms/translations": "3.94.0",
     "@payloadcms/ui": "3.94.0",
     "@radix-ui/react-accordion": "1.2.11",
@@ -62,8 +67,7 @@
     "sharp": "0.35.4",
     "sonner": "^1.7.2",
     "stripe": "18.5.0",
-    "tailwind-merge": "^3.4.0",
-    "@payloadcms/db-postgres": "3.94.0"
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -100,7 +104,12 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "sharp"
+      "@swc/core",
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
     ]
-  }
+  },
+  "private": true,
+  "packageManager": "pnpm@10.34.6"
 }
