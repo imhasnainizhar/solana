@@ -8,3 +8,11 @@
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
+
+/* Storefront "Edit section" deep links (see components/admin/HashScroll) */
+.sol-row-flash {
+  outline: 2px solid var(--theme-success-500);
+  outline-offset: 4px;
+  border-radius: var(--style-radius-m);
+  transition: outline-color 0.6s;
+}

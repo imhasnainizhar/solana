@@ -1,84 +1,84 @@
-import { Banner } from '@payloadcms/ui'
+import type { BasePayload, TypedUser } from 'payload'
+
 import React from 'react'
 
+import { brand } from '@/lib/brand'
 import { SeedButton } from './SeedButton'
 import './index.scss'
 
 const baseClass = 'before-dashboard'
 
-export const BeforeDashboard: React.FC = () => {
+type Props = { payload: BasePayload; user?: TypedUser | null }
+
+/** Dashboard welcome + quick actions for store owners (server component). */
+export async function BeforeDashboard({ payload, user }: Props) {
+  const [home, products] = await Promise.all([
+    payload.find({
+      collection: 'pages',
+      depth: 0,
+      draft: true,
+      limit: 1,
+      pagination: false,
+      select: { slug: true },
+      where: { slug: { equals: 'home' } },
+    }),
+    payload.count({ collection: 'products' }),
+  ])
+  const homeId = home.docs[0]?.id
+  const firstName = (
+    user && 'name' in user && typeof user.name === 'string' ? user.name : ''
+  ).split(' ')[0]
+
+  const actions = [
+    {
+      href: homeId ? `/admin/collections/pages/${homeId}` : '/admin/collections/pages/create',
+      title: 'Edit home page',
+      text: 'Add, reorder and style sections with live preview.',
+    },
+    {
+      href: '/admin/globals/theme',
+      title: 'Theme',
+      text: 'Presets, colors, fonts, buttons, spacing and motion.',
+    },
+    {
+      href: '/admin/collections/products',
+      title: 'Products',
+      text: `${products.totalDocs} product${products.totalDocs === 1 ? '' : 's'} — prices, variants, stock.`,
+    },
+    {
+      href: '/',
+      title: 'View store ↗',
+      text: 'Open the storefront with the build-mode bar.',
+      external: true,
+    },
+  ]
+
   return (
     <div className={baseClass}>
-      <Banner className={`${baseClass}__banner`} type="success">
-        <h4>Welcome to your dashboard!</h4>
-      </Banner>
-      Here&apos;s what to do next:
-      <ul className={`${baseClass}__instructions`}>
-        <li>
-          <SeedButton />
-          {' with a few products and pages to jump-start your new project, then '}
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a href="/">visit your website</a>
-          {' to see the results.'}
-        </li>
-        <li>
-          {'Head over to '}
+      <p className={`${baseClass}__eyebrow`}>{brand.name}</p>
+      <h2 className={`${baseClass}__title`}>Welcome back{firstName ? `, ${firstName}` : ''}.</h2>
+      <p className={`${baseClass}__lead`}>
+        Your store is built from sections. Edit a page and its preview updates as you type; the
+        theme controls the look of everything.
+      </p>
+      <div className={`${baseClass}__actions`}>
+        {actions.map((a) => (
           <a
-            href="https://dashboard.stripe.com/test/apikeys"
-            rel="noopener noreferrer"
-            target="_blank"
+            className={`${baseClass}__action`}
+            href={a.href}
+            key={a.title}
+            {...(a.external ? { rel: 'noopener', target: '_blank' } : {})}
           >
-            Stripe to obtain your API Keys
+            <strong>{a.title}</strong>
+            <span>{a.text}</span>
           </a>
-          {
-            '. Create a new account if needed, then copy them into your environment variables and restart your server. See the '
-          }
-          <a
-            href="https://github.com/payloadcms/payload/blob/3.x/templates/ecommerce/README.md#stripe"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            README
-          </a>
-          {' for more details.'}
-        </li>
-        <li>
-          {'Modify your '}
-          <a
-            href="https://payloadcms.com/docs/configuration/collections"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            collections
-          </a>
-          {' and add more '}
-          <a
-            href="https://payloadcms.com/docs/fields/overview"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            fields
-          </a>
-          {' as needed. If you are new to Payload, we also recommend you check out the '}
-          <a
-            href="https://payloadcms.com/docs/getting-started/what-is-payload"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Getting Started
-          </a>
-          {' docs.'}
-        </li>
-      </ul>
-      {'Pro Tip: This block is a '}
-      <a
-        href="https://payloadcms.com/docs/admin/components#base-component-overrides"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        custom component
-      </a>
-      , you can remove it at any time by updating your <strong>payload.config</strong>.
+        ))}
+      </div>
+      {!homeId && (
+        <p className={`${baseClass}__seed`}>
+          Empty store? <SeedButton /> with the Solana Studio demo content (replaces existing data).
+        </p>
+      )}
     </div>
   )
 }

@@ -1,24 +1,63 @@
 @import '@payloadcms/ui/scss';
 
 .dashboard .before-dashboard {
-  margin-bottom: base(1.5);
+  margin-bottom: base(2);
 
-  &__banner {
-    & h4 {
-      margin: 0;
+  &__eyebrow {
+    margin: 0 0 base(0.25);
+    color: var(--theme-elevation-500);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    margin: 0 0 base(0.5);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  &__lead {
+    max-width: 38rem;
+    margin: 0 0 base(1.25);
+    color: var(--theme-elevation-650);
+  }
+
+  &__actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: base(0.75);
+  }
+
+  &__action {
+    display: flex;
+    flex-direction: column;
+    gap: base(0.25);
+    padding: base(0.9);
+    border: 1px solid var(--theme-elevation-150);
+    border-radius: var(--style-radius-l);
+    background: var(--theme-elevation-50);
+    color: var(--theme-text);
+    text-decoration: none;
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+
+    span {
+      color: var(--theme-elevation-600);
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
+
+    &:hover {
+      border-color: var(--theme-elevation-400);
+      transform: translateY(-1px);
     }
   }
 
-  &__instructions {
-    list-style: decimal;
-    margin-bottom: base(0.5);
-
-    & li {
-      width: 100%;
-    }
-  }
-
-  & a:hover {
-    opacity: 0.85;
+  &__seed {
+    margin-top: base(1);
+    color: var(--theme-elevation-600);
   }
 }

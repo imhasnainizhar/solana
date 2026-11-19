@@ -24,7 +24,9 @@ import { Users } from '@/collections/Users'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
 import { Theme } from '@/globals/Theme'
+import { brand } from '@/lib/brand'
 import { plugins } from './plugins'
+import { adminGroupsPlugin } from './plugins/adminGroups'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -32,12 +34,26 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     components: {
-      // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below and the import `BeforeLogin` statement on line 15.
       beforeLogin: ['@/components/BeforeLogin#BeforeLogin'],
-      // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below and the import `BeforeDashboard` statement on line 15.
+      // Welcome + quick actions ("Edit home page", "Theme", "Products", "View store").
       beforeDashboard: ['@/components/BeforeDashboard#BeforeDashboard'],
+      graphics: {
+        Icon: '@/components/admin/Graphics#Icon',
+        Logo: '@/components/admin/Graphics#Logo',
+      },
+      // Scrolls to a block when opened from the storefront's "Edit section" link.
+      providers: ['@/components/admin/HashScroll#HashScroll'],
+    },
+    meta: {
+      titleSuffix: ` — ${brand.name} admin`,
+      icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/favicon.svg' }],
+    },
+    livePreview: {
+      breakpoints: [
+        { label: 'Mobile', name: 'mobile', width: 390, height: 844 },
+        { label: 'Tablet', name: 'tablet', width: 820, height: 1180 },
+        { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
+      ],
     },
     user: Users.slug,
   },
@@ -97,6 +113,8 @@ export default buildConfig({
       collections: { media: true },
       token: process.env.BLOB_READ_WRITE_TOKEN || '',
     }),
+    // Last: sidebar groups (Store / Content / Settings) incl. plugin-added collections.
+    adminGroupsPlugin,
   ],
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
