@@ -268,7 +268,7 @@ export const seed = async ({ payload, req }: { payload: Payload; req: PayloadReq
 
   const customer = await payload.create({
     collection: 'users',
-    data: { name: 'Customer', email: 'customer@example.com', password: 'password', roles: ['customer'] },
+    data: { name: 'Customer', email: 'customer@example.com', roles: ['customer'] },
   })
   await payload.create({
     collection: 'addresses',

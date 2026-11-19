@@ -1,4 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import {
   BoldFeature,
@@ -16,7 +17,9 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
+import { authEndpoints } from '@/auth/endpoints'
 import { Categories } from '@/collections/Categories'
+import { LoginTokens } from '@/collections/LoginTokens'
 import { Media } from '@/collections/Media'
 import { Pages } from '@/collections/Pages'
 import { Subscribers } from '@/collections/Subscribers'
@@ -28,12 +31,21 @@ import { brand } from '@/lib/brand'
 import { plugins } from './plugins'
 import { adminGroupsPlugin } from './plugins/adminGroups'
 
+/** "Name <addr@x>" or "addr@x" → parts for the email adapter. */
+function parseFrom(value?: string): { address: string; name: string } {
+  const match = value?.match(/^\s*"?([^"<]*?)"?\s*<([^>]+)>\s*$/)
+  if (match) return { address: match[2].trim(), name: match[1].trim() || brand.name }
+  return { address: value?.trim() || 'no-reply@example.com', name: brand.name }
+}
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
   admin: {
     components: {
+      // Passwordless sign-in (Google / magic link). Payload hides its own email +
+      // password form because the users collection disables the local strategy.
       beforeLogin: ['@/components/BeforeLogin#BeforeLogin'],
       // Welcome + quick actions ("Edit home page", "Theme", "Products", "View store").
       beforeDashboard: ['@/components/BeforeDashboard#BeforeDashboard'],
@@ -57,7 +69,7 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [Users, Pages, Categories, Media, Subscribers],
+  collections: [Users, Pages, Categories, Media, Subscribers, LoginTokens],
   db: postgresAdapter({
     pool: {
       // DATABASE_URI is canonical; POSTGRES_URL / DATABASE_URL are what the
@@ -102,8 +114,27 @@ export default buildConfig({
       ]
     },
   }),
-  //email: nodemailerAdapter(),
-  endpoints: [],
+  // Magic-link emails. Any SMTP provider works (Resend: smtp.resend.com, user
+  // "resend", pass = API key). Without SMTP_HOST Payload's console adapter is
+  // used and, outside production, sign-in links are logged to the console.
+  ...(process.env.SMTP_HOST
+    ? {
+        email: nodemailerAdapter({
+          defaultFromAddress: parseFrom(process.env.EMAIL_FROM).address,
+          defaultFromName: parseFrom(process.env.EMAIL_FROM).name,
+          transportOptions: {
+            host: process.env.SMTP_HOST,
+            port: Number(process.env.SMTP_PORT || 587),
+            secure: Number(process.env.SMTP_PORT) === 465,
+            auth: process.env.SMTP_USER
+              ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+              : undefined,
+          },
+        }),
+      }
+    : {}),
+  // POST /api/auth/magic-link, GET /api/auth/google, GET /api/auth/google/callback
+  endpoints: authEndpoints,
   globals: [Header, Footer, Theme],
   plugins: [
     ...plugins,
