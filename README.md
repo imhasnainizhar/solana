@@ -11,7 +11,7 @@ An open-source, full-stack e-commerce store template for **small premium brands 
 - **@payloadcms/plugin-ecommerce** — products, variants, variant types/options, carts, addresses, orders, transactions, Stripe payments
 - **Postgres** via `@payloadcms/db-postgres` (works with Vercel Postgres / Neon)
 - **Vercel Blob** via `@payloadcms/storage-vercel-blob` (enabled only when `BLOB_READ_WRITE_TOKEN` is set)
-- **Tailwind CSS v4**, shadcn/ui primitives, **pnpm**
+- **Tailwind CSS v4**, shadcn/ui primitives, **Bun** (package manager / script runner; the app itself runs on Node)
 
 Based on the official [Payload ecommerce template](https://github.com/payloadcms/payload/tree/main/templates/ecommerce).
 
@@ -23,26 +23,26 @@ Based on the official [Payload ecommerce template](https://github.com/payloadcms
 
 ## Local development
 
-Requirements: Node 22/24+, pnpm 10, a local Postgres.
+Requirements: Node 22/24+, Bun 1.4+, a local Postgres.
 
 ```bash
 cp .env.example .env          # then edit values (PAYLOAD_SECRET, DATABASE_URI, …)
-pnpm install
-pnpm dev                      # http://localhost:3000, admin at /admin
+bun install
+bun run dev                   # http://localhost:3000, admin at /admin
 ```
 
 In development Payload pushes schema changes to the database automatically. Useful scripts:
 
 | Script | What it does |
 | --- | --- |
-| `pnpm dev` | Start Next.js + Payload in dev mode |
-| `pnpm build` / `pnpm start` | Production build / serve |
-| `pnpm generate:types` | Regenerate `src/payload-types.ts` |
-| `pnpm generate:importmap` | Regenerate the admin import map |
-| `pnpm migrate:create <name>` | Create a Postgres migration from schema changes |
-| `pnpm migrate` | Run pending migrations |
-| `pnpm run ci` | `payload migrate` then `pnpm build` (use as Vercel build command) |
-| `pnpm lint` | ESLint |
+| `bun run dev` | Start Next.js + Payload in dev mode |
+| `bun run build` / `bun run start` | Production build / serve |
+| `bun run generate:types` | Regenerate `src/payload-types.ts` |
+| `bun run generate:importmap` | Regenerate the admin import map |
+| `bun run migrate:create <name>` | Create a Postgres migration from schema changes |
+| `bun run migrate` | Run pending migrations |
+| `bun run ci` | `payload migrate` then `bun run build` (use as Vercel build command) |
+| `bun run lint` | ESLint |
 
 Sign-in is passwordless (see [Authentication](#authentication)). Admins are bootstrapped from `ADMIN_EMAILS`; locally, with no SMTP configured, sign-in links are printed to the server console.
 
@@ -100,10 +100,10 @@ Note: some corporate mail scanners open links before the user does. Because each
 2. Add **Neon Postgres** from the Vercel Marketplace (Storage tab) — this injects `POSTGRES_URL` / `DATABASE_URL`.
 3. Add a **Vercel Blob** store — this injects `BLOB_READ_WRITE_TOKEN`.
 4. Set `PAYLOAD_SECRET`, `PREVIEW_SECRET`, `NEXT_PUBLIC_SERVER_URL`, the Stripe keys, `ADMIN_EMAILS`, SMTP settings and (optionally) the Google OAuth keys.
-5. Set the build command to `pnpm run ci` so migrations run before each build.
+5. Set the build command to `bun run ci` so migrations run before each build.
 6. Deploy, open `/admin`, and sign in with an address listed in `ADMIN_EMAILS`. That account gets the admin role.
 
-When you change collections/fields, run `pnpm migrate:create <name>` locally and commit the generated file in `src/migrations/`.
+When you change collections/fields, run `bun run migrate:create <name>` locally and commit the generated file in `src/migrations/`.
 
 ## License
 
